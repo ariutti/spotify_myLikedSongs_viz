@@ -3,7 +3,7 @@
 import json, subprocess, time
 
 try:
-	fp = open("myTracks.json", "r")
+	fp = open("../myDatasets/20230403_LikedSongsDB.json", "r")
 except:
 	print("failed to open the Json file")
 	exit()
@@ -12,7 +12,7 @@ j = json.load(fp)
 NUM_TRACK = len(j)
 print( "We have {} tracks inside the list".format(NUM_TRACK) )
 
-PREVIEW_FOLDER = "./previews"
+PREVIEW_FOLDER = "../previews"
 for i, track_obj in enumerate(j):
 
 	# now we should download the audio preview of the track
