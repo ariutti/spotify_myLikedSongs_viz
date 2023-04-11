@@ -1,25 +1,25 @@
 // for debugging purposes
 let NUM_PARTICLE_TO_BE_CONSIDERED = 300;
+//let PARTICLE_SUBSET;
 
 
-
-
-
-
-
+// don't touch here below ******************************************************
 let particles = [];
 let sampleLoadedCounter = 0;
 let LOAD_LOCAL_MP3 = true;
 let NUM_VALID_PREVIEW = 0;
-let READY_TO_PLAY_AUDIO = false;
+let ALL_SONGS_LOADED = false;
 let axis = [];
 let jsonDB;
 let JSON_LOADED = false;
 
-
-
 let COLOR_FROM;
 let COLOR_TO;
+
+let loadingBar;
+
+// PHYSICS STUFF ***************************************************************
+let EVERYTHING_ON_ITS_RIGHT_PLACE = false;
 
 // PRELOAD /////////////////////////////////////////////////////////////////////
 function preload() {
@@ -33,10 +33,13 @@ function preload() {
 // SETUP ///////////////////////////////////////////////////////////////////////
 function setup() {
   createCanvas(1200, 800);
+  smooth()
 
-
-  COLOR_FROM = color(218, 165, 32);
-  COLOR_TO = color(72, 61, 139);
+  // some graphics stuff
+  //COLOR_FROM = color(218, 165, 32);
+  //COLOR_TO = color(72, 61, 139);
+  COLOR_FROM = color(255, 0, 0);
+  COLOR_TO = color(0, 255, 0);
 
   // we have to take care of the AudioContext
   // an make it work only if necessary
@@ -66,7 +69,8 @@ function setup() {
   let max_z = -9999;
   let range_z = 0;
 
-  for(let i=0; i<songList.length;i++) {
+  //for(let i=0; i<songList.length;i++) {
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
     let tempo = songList[i]["tempo"];
     let danceability = songList[i]["danceability"];
     let energy = songList[i]["energy"];
@@ -88,11 +92,14 @@ function setup() {
 
   axis.push( new Axis("x_tempo", min_x, max_x, 10.0, width*0.8) );
   axis.push( new Axis("y_dance", min_y, max_y, 10.0, height*0.8) );
-  axis.push( new Axis("w_energy", min_w, max_w, 0.0, 20.0) );
+  axis.push( new Axis("w_energy", min_w, max_w, 2, 10) );
   axis.push( new Axis("z_valence", min_z, max_z, 0.0, 1.0) );
 
   // now its time to create all the particles
-  for(let i=0; i<songList.length;i++) {
+
+  //for(let i=0; i<songList.length;i++) {
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
+
     // retrieve the song informations
     let id = songList[i]["id"];
     let artists = songList[i]["artist"];
@@ -135,62 +142,122 @@ function setup() {
 
   print( "We have ", particles.length, " songs but with ", NUM_VALID_PREVIEW," valid preview" );
 
-  // load all the songs
-  NUM_VALID_PREVIEW = 0;
-  //for(let i=0; i<particles.length; i++) {
-  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
+  loadingBar = new LoadingBar(
+    width*0.5,
+    height*0.5,
+    200,
+    20,
+    NUM_VALID_PREVIEW
+  );
+
+  for(let i=0; i<particles.length; i++) {
     particles[i].loadTheSong();
-
-    if( particles[i].getPreviewUrl() != null ) {
-      NUM_VALID_PREVIEW ++;
-    }
   }
-  print( "the subgroup we are considering is made of ", NUM_PARTICLE_TO_BE_CONSIDERED, " songs but with ", NUM_VALID_PREVIEW," valid preview" );
-
 
   // font stuff
-  textSize(12);
+  textSize(24);
   textAlign(CENTER, CENTER);
-
-
 }
 
 
 // DRAW ////////////////////////////////////////////////////////////////////////
 function draw() {
-  background(120);
 
-  // a workaround to play audio only when all samples have been loaded
-  if( !READY_TO_PLAY_AUDIO ) {
-    print( sampleLoadedCounter );
-    if( sampleLoadedCounter == NUM_VALID_PREVIEW) {
-      READY_TO_PLAY_AUDIO = true;
+  ALL_SONGS_LOADED = loadingBar.getStatus();
+  if( !ALL_SONGS_LOADED ) {
+    background(120)
+    loadingBar.setCounter( sampleLoadedCounter );
+
+    /*
+    computeSeparation();
+    for(let i=0; i<particles.length; i++) {
+      particles[i].display();
     }
+
+
+
+    push()
+    noStroke()
+    fill(120, 200)
+    rect(0,0,width, height);
+    pop()
+    */
+
+    loadingBar.display();
+
+    // while loading the songs we can still
+    // compute some physics stuff ("separation");
+    return;
   }
 
-
+  background(255);
+  // draw axis
   axis[0].displayHorizontal( 10.0, 1);
   axis[1].displayVertical( 10.0, 1);
 
-  if( READY_TO_PLAY_AUDIO ) {
-    for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
-      particles[i].checkIfInside( mouseX, mouseY);
+  computeSeparation();
+
+
+
+
+
+
+
+  if( ALL_SONGS_LOADED ) {
+    for(let i=0; i<particles.length; i++) {
+      particles[i].checkIfInside( mouseX, mouseY );
       particles[i].playSongIfInside();
     }
   }
 
-
-  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
+  for(let i=0; i<particles.length; i++) {
     particles[i].display();
   }
 
   // once we have drawn the particles, we can show the text
-  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
-    particles[i].showText( );
+  for(let i=0; i<particles.length; i++) {
+    particles[i].showText();
   }
+
 }
 
 
+function computeSeparation() {
+  // some physics separation stuff here ****************************************
+  let particleLookingForPlace = 0;
+
+  for (let i = 0; i < particles.length; i++) {
+    // Path following and separation are worked on in this function
+    particles[i].separate( particles );
+    particles[i].applyFriction(0.5);
+    // Call the generic run method (update, borders, display, etc.)
+    particles[i].update();
+
+    if( !particles[i].getStatus() ) {
+      //println("particle ", v.getId(), " didn't find its position yet");
+      particleLookingForPlace ++;
+    }
+
+    //vehicles[i].borders();
+    //particles[i].display();
+  }
+
+  if( !EVERYTHING_ON_ITS_RIGHT_PLACE) {
+    //print("looking for a place: ", particleLookingForPlace);
+    if( particleLookingForPlace == 0) {
+      print( "everything is on its own place");
+      EVERYTHING_ON_ITS_RIGHT_PLACE = true;
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].settleDown();
+      }
+    }
+  }
+  // end of physics stuff ******************************************************
+
+}
+
+
+// OTHER FUNCS /////////////////////////////////////////////////////////////////
 function mouseClicked() {
   getAudioContext().resume();
 }
