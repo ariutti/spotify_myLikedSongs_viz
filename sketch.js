@@ -1,11 +1,12 @@
 // for debugging purposes
-let NUM_PARTICLE_TO_BE_CONSIDERED = 300;
+let NUM_PARTICLE_TO_BE_CONSIDERED = 1000;
 //let PARTICLE_SUBSET;
 
 
 // don't touch here below ******************************************************
 let particles = [];
 let sampleLoadedCounter = 0;
+let TMP_SONG_LOADED = false;
 let LOAD_LOCAL_MP3 = true;
 let NUM_VALID_PREVIEW = 0;
 let ALL_SONGS_LOADED = false;
@@ -69,8 +70,8 @@ function setup() {
   let max_z = -9999;
   let range_z = 0;
 
-  //for(let i=0; i<songList.length;i++) {
-  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
+  for(let i=0; i<songList.length;i++) {
+  //for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
     let tempo = songList[i]["tempo"];
     let danceability = songList[i]["danceability"];
     let energy = songList[i]["energy"];
@@ -90,8 +91,8 @@ function setup() {
     if( valence < min_z ) min_z = valence;
   }
 
-  axis.push( new Axis("x_tempo", min_x, max_x, 10.0, width*0.8) );
-  axis.push( new Axis("y_dance", min_y, max_y, 10.0, height*0.8) );
+  axis.push( new Axis("x_tempo", min_x, max_x, 30.0, width*0.8) );
+  axis.push( new Axis("y_dance", min_y, max_y, 30.0, height*0.8) );
   axis.push( new Axis("w_energy", min_w, max_w, 2, 10) );
   axis.push( new Axis("z_valence", min_z, max_z, 0.0, 1.0) );
 
@@ -150,13 +151,39 @@ function setup() {
     NUM_VALID_PREVIEW
   );
 
+  // in order to wai for the promises to return
+  // ref: https://stackoverflow.com/questions/67221313/how-to-wait-in-p5-js
+
+  TMP_SONG_LOADED = false;
   for(let i=0; i<particles.length; i++) {
-    particles[i].loadTheSong();
+    if( particles[i].getPreviewUrl() == null ) {
+      print( "song ", particles[i].getId(), " doesn't have the preview");
+      continue;
+    }
+
+     particles[i].loadTheSong(
+     function() {
+        sampleLoadedCounter++;
+        TMP_SONG_LOADED=true;
+        print("song ", i, "loaded!")
+       }
+     );
+
+     sleep(1000).then(function() {
+       print("waited 1 sec")
+     });
   }
 
   // font stuff
   textSize(24);
   textAlign(CENTER, CENTER);
+}
+
+// a custom 'sleep' or wait' function, that returns a Promise that resolves only after a timeout
+function sleep(millisecondsDuration) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, millisecondsDuration);
+  })
 }
 
 
@@ -192,8 +219,8 @@ function draw() {
 
   background(255);
   // draw axis
-  axis[0].displayHorizontal( 10.0, 1);
-  axis[1].displayVertical( 10.0, 1);
+  axis[0].displayHorizontal( 30.0, 1);
+  axis[1].displayVertical( 30.0, 1);
 
   computeSeparation();
 

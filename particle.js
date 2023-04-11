@@ -46,13 +46,8 @@ class Particle {
   }
 
   // LOAD THE SONG /////////////////////////////////////////////////////////////
-  loadTheSong() {
-    // do nothing if the song has no preview
-    if( this.preview_url == null ) {
-      print( "song '", this.id, "' doesn't have a preview");
-      return;
-    }
-
+  // this function must be called only if the preview URL is not null
+  loadTheSong( _callback ) {
     let songURL;
     if( LOAD_LOCAL_MP3 ) {
       songURL = "/previews/".concat( this.id );
@@ -60,9 +55,7 @@ class Particle {
     } else {
       songURL = this.preview_url;
     }
-    this.song = loadSound( songURL, function() {
-      sampleLoadedCounter++;
-    } );
+    this.song = loadSound(songURL, _callback );
     this.song.setLoop( true );
   }
 
