@@ -1,13 +1,25 @@
+// for debugging purposes
+let NUM_PARTICLE_TO_BE_CONSIDERED = 300;
+
+
+
+
+
+
+
 let particles = [];
 let sampleLoadedCounter = 0;
 let LOAD_LOCAL_MP3 = true;
-
+let NUM_VALID_PREVIEW = 0;
+let READY_TO_PLAY_AUDIO = false;
 let axis = [];
-
 let jsonDB;
 let JSON_LOADED = false;
 
 
+
+let COLOR_FROM;
+let COLOR_TO;
 
 // PRELOAD /////////////////////////////////////////////////////////////////////
 function preload() {
@@ -21,6 +33,10 @@ function preload() {
 // SETUP ///////////////////////////////////////////////////////////////////////
 function setup() {
   createCanvas(1200, 800);
+
+
+  COLOR_FROM = color(218, 165, 32);
+  COLOR_TO = color(72, 61, 139);
 
   // we have to take care of the AudioContext
   // an make it work only if necessary
@@ -69,17 +85,11 @@ function setup() {
     if( valence > max_z ) max_z = valence;
     if( valence < min_z ) min_z = valence;
   }
-  //print("X axis /tempo) min:",min_x,", max:",max_x,";");
-  //print("Y axis (danceability) min:",min_y,", max:",max_y,";");
-  //print("W axis (energy) min:",min_w,", max:",max_w,";");
-  //print("Z axis (valence) min:",min_z,", max:",max_z,";");
 
-  axis.push( new Axis("x_tempo", min_x, max_x, 0.0, 1.0) );
-  axis.push( new Axis("y_dance", min_y, max_y, 0.0, 1.0) );
-  axis.push( new Axis("w_energy", min_w, max_w, 0.0, 1.0) );
+  axis.push( new Axis("x_tempo", min_x, max_x, 10.0, width*0.8) );
+  axis.push( new Axis("y_dance", min_y, max_y, 10.0, height*0.8) );
+  axis.push( new Axis("w_energy", min_w, max_w, 0.0, 20.0) );
   axis.push( new Axis("z_valence", min_z, max_z, 0.0, 1.0) );
-
-http://127.0.0.1:8080/assets/2el13qIMOd8cripOqNohGB.mp3
 
   // now its time to create all the particles
   for(let i=0; i<songList.length;i++) {
@@ -118,37 +128,69 @@ http://127.0.0.1:8080/assets/2el13qIMOd8cripOqNohGB.mp3
       danceability, energy, acousticness, instrumentalness,
       liveness, speechiness, valence
     ));
+    if( preview_url != null ) {
+      NUM_VALID_PREVIEW ++;
+    }
   }
 
-  print( particles.length );
+  print( "We have ", particles.length, " songs but with ", NUM_VALID_PREVIEW," valid preview" );
 
   // load all the songs
-  for(let i=0; i<particles.length; i++) {
-  //for(let i=0; i<10; i++) {
+  NUM_VALID_PREVIEW = 0;
+  //for(let i=0; i<particles.length; i++) {
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
     particles[i].loadTheSong();
+
+    if( particles[i].getPreviewUrl() != null ) {
+      NUM_VALID_PREVIEW ++;
+    }
   }
+  print( "the subgroup we are considering is made of ", NUM_PARTICLE_TO_BE_CONSIDERED, " songs but with ", NUM_VALID_PREVIEW," valid preview" );
+
+
+  // font stuff
+  textSize(12);
+  textAlign(CENTER, CENTER);
+
 
 }
 
 
 // DRAW ////////////////////////////////////////////////////////////////////////
 function draw() {
-  background(155);
+  background(120);
 
-  print( sampleLoadedCounter );
-
-  /*
-  print( sampleLoaded )
-
-  if( sampleLoaded ) {
-    userStartAudio();
-    particle.checkIfInside(mouseX, mouseY);
+  // a workaround to play audio only when all samples have been loaded
+  if( !READY_TO_PLAY_AUDIO ) {
+    print( sampleLoadedCounter );
+    if( sampleLoadedCounter == NUM_VALID_PREVIEW) {
+      READY_TO_PLAY_AUDIO = true;
+    }
   }
-  particle.update();
-  particle.display();
 
-  textAlign(CENTER, CENTER);
-  text(getAudioContext().state, width/2, height/2);
-  */
 
+  axis[0].displayHorizontal( 10.0, 1);
+  axis[1].displayVertical( 10.0, 1);
+
+  if( READY_TO_PLAY_AUDIO ) {
+    for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
+      particles[i].checkIfInside( mouseX, mouseY);
+      particles[i].playSongIfInside();
+    }
+  }
+
+
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
+    particles[i].display();
+  }
+
+  // once we have drawn the particles, we can show the text
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED; i++) {
+    particles[i].showText( );
+  }
+}
+
+
+function mouseClicked() {
+  getAudioContext().resume();
 }

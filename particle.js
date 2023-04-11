@@ -31,8 +31,10 @@ class Particle {
     this.song;
 
     // physics stuff
+    this.c = _c;
     this.position = createVector( _x, _y);
     this.r = _r;
+
   }
 
   loadTheSong() {
@@ -43,24 +45,102 @@ class Particle {
     }
 
     let songURL;
-
-
     if( LOAD_LOCAL_MP3 ) {
       songURL = "/previews/".concat( this.id );
       songURL = songURL.concat( ".mp3" );
-      print( typeof songURL  )
-
-      //songURL = "./assets/0aegbRrg4oVF2kSMZwmnq8.mp3"
     } else {
       songURL = this.preview_url;
     }
     this.song = loadSound( songURL, function() {
-      //print("sample loaded");
       sampleLoadedCounter++;
     } );
     this.song.setLoop( true );
   }
 
+
+  update() {
+    // do nothing for the moment
+  }
+
+
+  display() {
+    push();
+    stroke(0);
+    translate( this.position.x, this.position.y );
+
+    if( this.isInside ) {
+      fill(0,255,0);
+    } else {
+      let interColor = lerpColor(COLOR_FROM, COLOR_TO, this.c);
+      fill( interColor );
+    }
+
+    if( this.preview_url == null) {
+      fill(255,0,0);
+    }
+
+    ellipse(0, 0, this.r*2, this.r*2);
+    pop();
+  }
+
+
+  showText() {
+    push();
+    strokeWeight(2);
+    translate( this.position.x, this.position.y);
+    if( this.isInside ) {
+      strokeWeight(2);
+      text(this.name, 0, 0);
+      strokeWeight(0.5);
+      text(this.artists, 0, 12);
+      text(this.tempo, 0, 24);
+    } else {
+
+    }
+    pop();
+  }
+
+
+
+
+  playSongIfInside() {
+    if( this.preview_url == null ) {
+      return;
+    }
+    
+    if( this.isInside ) {
+      if( !this.song.isPlaying() ) {
+        //print("playback started/resumed");
+        this.song.play();
+      }
+    } else {
+      if( this.song.isPlaying() ) {
+        //print("playback paused");
+        this.song.pause();
+      }
+    }
+  }
+
+
+
+  checkIfInside( _mouseX, _mouseY ) {
+    if( dist( _mouseX, mouseY, this.position.x, this.position.y) < this.r) {
+      // if we are here it means mouse is inside the particle
+      if( !this.isInside ) {
+        this.isInside = true;
+        //print( "inside" )
+      }
+    } else {
+      // if we are here it means mouse is outside the particle
+      if( this.isInside ) {
+        this.isInside = false;
+        //print("outside")
+      }
+    }
+  }
+
+
+  // GETTERS ///////////////////////////////////////////////////////////////////
   getId() {
     return this.id;
   }
@@ -69,55 +149,7 @@ class Particle {
     return this.r;
   }
 
-
-  update() {
-    // do nothing for the moment
-  }
-
-  display() {
-    push();
-    stroke(0);
-    translate( this.position.x, this.position.y );
-
-    if( this.isInside ) {
-      fill(255,0,0);
-    } else {
-      fill(120);
-    }
-
-    if( this.preview_url == null) {
-      fill(0);
-    }
-
-
-    ellipse(0, 0, this.r*2, this.r*2);
-    pop();
-  }
-
-  checkIfInside( _mouseX, _mouseY ) {
-    //this.song.play();
-
-    if( dist( _mouseX, mouseY, this.position.x, this.position.y) < this.r) {
-      // if we are here it means mouse is inside the particle
-      if( !this.isInside ) {
-        this.isInside = true;
-        //print( "inside" );
-        if( !this.song.isPlaying() ) {
-          print("playback started/resumed");
-          this.song.play();
-        }
-      }
-    } else {
-      // if we are here it means mouse is outside the particle
-      if( this.isInside ) {
-        this.isInside = false;
-        //print("outside")
-        if( this.song.isPlaying() ) {
-          print("playback paused");
-          this.song.pause();
-        }
-      }
-    }
-
+  getPreviewUrl() {
+    return this.preview_url;
   }
 };
