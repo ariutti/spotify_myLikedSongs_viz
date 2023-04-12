@@ -151,7 +151,7 @@ function setup() {
   let e = select('#num_songs');
   e.elt.textContent = particles.length ;
   e = select('#num_previews');
-  e.elt.textContent = NUM_VALID_PREVIEWS;
+  e.elt.textContent = particles.length-NUM_VALID_PREVIEWS;
 
 
 
