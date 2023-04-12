@@ -1,0 +1,46 @@
+[
+  {
+    "id": "4xiyq1iRdsxuU1BPUJ490Z",
+    "artists": [
+      "The Cure"
+    ],
+    "name": "Close To Me",
+    "preview_url": "https://p.scdn.co/mp3-preview/391f80bf6008a2082fcb557293712b256bf5d051?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/4xiyq1iRdsxuU1BPUJ490Z",
+    "tempo": 185.075,
+    "time_signature": 4,
+    "duration_ms": 203267,
+    "key": 11,
+    "mode": 1,
+    "loudness": -11.139,
+    "danceability": 0.724,
+    "energy": 0.523,
+    "acousticness": 0.0745,
+    "instrumentalness": 0.703,
+    "liveness": 0.0811,
+    "speechiness": 0.116,
+    "valence": 0.965
+  },
+  {
+    "id": "6Y4cnbaeT5RgE9QvSeTuCY",
+    "artists": [
+      "The Bad Plus"
+    ],
+    "name": "Pound For Pound",
+    "preview_url": "https://p.scdn.co/mp3-preview/e84390f3e8b7a5f82d671f2bc88a0712853343e4?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/6Y4cnbaeT5RgE9QvSeTuCY",
+    "tempo": 119.879,
+    "time_signature": 4,
+    "duration_ms": 370133,
+    "key": 0,
+    "mode": 1,
+    "loudness": -11.276,
+    "danceability": 0.653,
+    "energy": 0.229,
+    "acousticness": 0.67,
+    "instrumentalness": 0.926,
+    "liveness": 0.107,
+    "speechiness": 0.0399,
+    "valence": 0.218
+  }
+]

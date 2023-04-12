@@ -4,7 +4,8 @@ class Particle {
     _artists, _name, _preview_url, _analysis_url,
     _tempo, _time_signature, _duration_ms, _key, _mode, _loudness,
     _danceability, _energy, _acousticness, _instrumentalness,
-    _liveness, _speechiness, _valence)
+    _liveness, _speechiness, _valence
+  )
     {
     // data point stuff
     this.id = _id;
@@ -32,6 +33,7 @@ class Particle {
 
     // graphics stuff
     this.c = _c;
+    this.visited = false;
 
     // physics stuff
     this.r = _r;
@@ -43,6 +45,9 @@ class Particle {
     this.maxSpeed = 2;
     this.readyToSettle = false;
     this.settled = false;
+
+    // data retrieval by interaction stuff
+    this.saved = false;
   }
 
   // LOAD THE SONG /////////////////////////////////////////////////////////////
@@ -63,19 +68,30 @@ class Particle {
   display() {
 
     push();
-    stroke(0);
-    strokeWeight(1);
+
     translate( this.position.x, this.position.y );
 
     if( this.settled ) {
       // if the particle already has found its spot
       // then, display it with graph colours
+
       if( this.isInside ) {
-        fill(0,255,0);
+        strokeWeight(4);
       } else {
-        let interColor = lerpColor(COLOR_FROM, COLOR_TO, this.c);
+        noStroke();
+      }
+
+      let interColor = lerpColor(COLOR_FROM, COLOR_TO, this.c);
+      if( !this.visited ) {
+        interColor.setAlpha( 255 );
+        fill( interColor );
+      } else {
+        interColor.setAlpha( 25 );
+        stroke(0)
         fill( interColor );
       }
+
+
 
       if( this.preview_url == null) {
         fill(0);
@@ -83,24 +99,38 @@ class Particle {
 
     } else if( this.readyToSettle ) {
       // it is grey if it is ready to settle down
+      stroke(255);
+      strokeWeight(1);
       fill(175);
     } else {
       // the particle is red if not settled down yet
+      stroke(255);
+      strokeWeight(1);
       fill(255,0,0);
     }
     ellipse(0, 0, this.r*2, this.r*2);
 
     // showCenter
-    strokeWeight(2);
-    stroke(120)
-    point( 0,0 )
+    // strokeWeight(2);
+    // stroke(120)
+    // point( 0,0 )
+
     pop();
   }
 
 
 
+  showText( _infoBox ) {
+    if( this.isInside ) {
+      let text = this.name + "\n" + this.artists + "\n" + this.tempo;
+      _infoBox.update( text );
+      _infoBox.display();
+    }
+  }
 
-  showText() {
+/*
+// old method no more used
+  showText( ) {
     let text_size = 24;
     textSize(text_size);
     textAlign(CENTER, CENTER);
@@ -115,8 +145,7 @@ class Particle {
     }
     pop();
   }
-
-
+*/
 
 
   playSongIfInside() {
@@ -124,15 +153,29 @@ class Particle {
       return;
     }
 
+    let songURL;
+    if( LOAD_LOCAL_MP3 ) {
+      songURL = "/previews/".concat( this.id );
+      songURL = songURL.concat( ".mp3" );
+    } else {
+      songURL = this.preview_url;
+    }
+
+
+    // if we are here it means the song has a valid preview
     if( this.isInside ) {
-      if( !this.song.isPlaying() ) {
+      if( !this.song ) {
+        //print( songURL )
+        this.song = new Audio( songURL );
         //print("playback started/resumed");
+        // TODO: implement a loop playback system
         this.song.play();
       }
     } else {
-      if( this.song.isPlaying() ) {
+      if( this.song ) {
         //print("playback paused");
         this.song.pause();
+        this.song = null
       }
     }
   }
@@ -144,6 +187,7 @@ class Particle {
       // if we are here it means mouse is inside the particle
       if( !this.isInside ) {
         this.isInside = true;
+        this.visited = true;
         //print( "inside" )
       }
     } else {
@@ -276,6 +320,39 @@ class Particle {
     //this.readyToSettle = true;
   }
 
+  resetVisited() {
+    this.visited = false;
+  }
+
+  getSongInfo() {
+    //print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
+    let songInfo = {};
+    songInfo.id = this.id;
+    songInfo.artists = this.artists;
+    songInfo.name = this.name;
+    songInfo.preview_url = this.preview_url;
+    songInfo.analysis_url = this.analysis_url;
+    songInfo.tempo = this.tempo;
+    songInfo.time_signature = this.time_signature;
+    songInfo.duration_ms = this.duration_ms;
+    songInfo.key = this.key;
+    songInfo.mode = this.mode;
+    songInfo.loudness = this.loudness;
+
+    songInfo.danceability = this.danceability;
+    songInfo.energy = this.energy;
+    songInfo.acousticness = this.acousticness;
+    songInfo.instrumentalness = this.instrumentalness;
+    songInfo.liveness = this.liveness;
+    songInfo.speechiness = this.speechiness;
+    songInfo.valence = this.valence;
+
+    this.saved = true;
+
+    return songInfo;
+
+  }
+
 
   // GETTERS ///////////////////////////////////////////////////////////////////
   getId() {
@@ -292,5 +369,17 @@ class Particle {
 
   getPreviewUrl() {
     return this.preview_url;
+  }
+
+  getVisited() {
+    return this.visited;
+  }
+
+  getSaved() {
+    return this.saved;
+  }
+
+  getInside() {
+    return this.isInside;
   }
 };

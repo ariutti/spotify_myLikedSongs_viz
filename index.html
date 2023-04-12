@@ -7,20 +7,22 @@
   <title>p5.js example</title>
   <style>
     body {
-      padding: 0;
-      margin: 0;
-      background-color: #1b1b1b;
+      padding: 10px;
+      margin: 2px;
+      background-color: #eeeeee;
     }
   </style>
-  <script src="/libs/p5.min.js"></script>
-  <script src="/libs/p5.sound.min.js"></script>
 
   <!--
+  <script src="/libs/p5.min.js"></script>
+  <script src="/libs/p5.sound.min.js"></script>
+-->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js" integrity="sha512-WzkwpdWEMAY/W8WvP9KS2/VI6zkgejR4/KTxTl4qHx0utqeyVE0JY+S1DlMuxDChC7x0oXtk/ESji6a0lP/Tdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  -->
 
-  <script src="LoadingBar.js"></script>
+  <script src="infoBox.js"></script>
+  <script src="loadingBar.js"></script>
   <script src="axis.js"></script>
   <script src="particle.js"></script>
   <script src="sketch.js"></script>
@@ -29,6 +31,24 @@
 
 <body>
   <main>
+    <h1>My Loved Song exploration toolkit</h1>
+    <p>We are exploring a database of <b id="num_songs">0</b> songs and only <b id="num_previews">0</b> of them have a valid <i>.mp3</i> preview (coloured in black).</p>
+    <ul>
+      <li> x axis represents <b>BPM</b>;</li>
+      <li> y axis represents <b>danceability</b>;</li>
+      <li> colour represents <b>valence</b>;</li>
+      <li> dimension represents <b>energy</b>;</li>
+    </ul>
+
+    <h2>Instructions</h2>
+    <ul>
+      <li> Click with the mouse before moving it over the particles in order for the audio to be initialized.</li>
+      <li> Move your mouse to explore the liked song database</li>
+      <li> press <b>r</b> to reset <i>visited</i> songs</li>
+      <li> Click mouse left button to save the song for later export</li>
+      <li> press <b>s</b> to save a new Json with the saved song from your exploration</li>
+    </ul>
+    <p>Already visited songs will be less bright in their color</p>
   </main>
 </body>
 

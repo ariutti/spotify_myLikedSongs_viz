@@ -1,15 +1,15 @@
 // for debugging purposes
-let NUM_PARTICLE_TO_BE_CONSIDERED = 1000;
+let NUM_PARTICLE_TO_BE_CONSIDERED = 100;
 //let PARTICLE_SUBSET;
 
 
 // don't touch here below ******************************************************
 let particles = [];
-let sampleLoadedCounter = 0;
-let TMP_SONG_LOADED = false;
-let LOAD_LOCAL_MP3 = true;
-let NUM_VALID_PREVIEW = 0;
-let ALL_SONGS_LOADED = false;
+//let sampleLoadedCounter = 0;
+//let TMP_SONG_LOADED = false;
+let LOAD_LOCAL_MP3 = false;
+let NUM_VALID_PREVIEWS = 0;
+//let ALL_SONGS_LOADED = true;
 let axis = [];
 let jsonDB;
 let JSON_LOADED = false;
@@ -18,6 +18,9 @@ let COLOR_FROM;
 let COLOR_TO;
 
 let loadingBar;
+let particleLookingForPlace;
+
+let SAVED_SONG_JSON = []
 
 // PHYSICS STUFF ***************************************************************
 let EVERYTHING_ON_ITS_RIGHT_PLACE = false;
@@ -39,8 +42,8 @@ function setup() {
   // some graphics stuff
   //COLOR_FROM = color(218, 165, 32);
   //COLOR_TO = color(72, 61, 139);
-  COLOR_FROM = color(255, 0, 0);
-  COLOR_TO = color(0, 255, 0);
+  COLOR_FROM = color(81, 127, 255);
+  COLOR_TO = color(255, 114, 48);
 
   // we have to take care of the AudioContext
   // an make it work only if necessary
@@ -52,7 +55,7 @@ function setup() {
 
   // convert json to array
   let songList = Object.values(jsonDB);
-  print( "There are ", songList.length, " inside the database");
+  print( "There are ", songList.length, " songs inside the database");
 
   // we also need to find some interesting value like
   let min_x =  9999;
@@ -98,8 +101,8 @@ function setup() {
 
   // now its time to create all the particles
 
-  //for(let i=0; i<songList.length;i++) {
-  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
+  for(let i=0; i<songList.length;i++) {
+  //for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
 
     // retrieve the song informations
     let id = songList[i]["id"];
@@ -129,6 +132,8 @@ function setup() {
     let r = axis[2].getConverted( energy );
     let c = axis[3].getConverted( valence );
 
+
+
     particles.push( new Particle(id,
       x,y,r,c,
       artists, name, preview_url, analysis_url,
@@ -137,85 +142,41 @@ function setup() {
       liveness, speechiness, valence
     ));
     if( preview_url != null ) {
-      NUM_VALID_PREVIEW ++;
+      NUM_VALID_PREVIEWS ++;
     }
   }
 
-  print( "We have ", particles.length, " songs but with ", NUM_VALID_PREVIEW," valid preview" );
+  print( "We have ", particles.length, " songs but with ", NUM_VALID_PREVIEWS," valid preview" );
+
+  let e = select('#num_songs');
+  e.elt.textContent = particles.length ;
+  e = select('#num_previews');
+  e.elt.textContent = NUM_VALID_PREVIEWS;
+
+
 
   loadingBar = new LoadingBar(
     width*0.5,
     height*0.5,
     200,
     20,
-    NUM_VALID_PREVIEW
+    particles.length
   );
-
-  // in order to wai for the promises to return
-  // ref: https://stackoverflow.com/questions/67221313/how-to-wait-in-p5-js
-
-  TMP_SONG_LOADED = false;
-  for(let i=0; i<particles.length; i++) {
-    if( particles[i].getPreviewUrl() == null ) {
-      print( "song ", particles[i].getId(), " doesn't have the preview");
-      continue;
-    }
-
-     particles[i].loadTheSong(
-     function() {
-        sampleLoadedCounter++;
-        TMP_SONG_LOADED=true;
-        print("song ", i, "loaded!")
-       }
-     );
-
-     sleep(1000).then(function() {
-       print("waited 1 sec")
-     });
-  }
 
   // font stuff
   textSize(24);
   textAlign(CENTER, CENTER);
-}
 
-// a custom 'sleep' or wait' function, that returns a Promise that resolves only after a timeout
-function sleep(millisecondsDuration) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, millisecondsDuration);
-  })
+  // INFO BOX stuff
+  infoBox = new InfoBox(width*0.05, height*0.1, 200, 50);
 }
 
 
 // DRAW ////////////////////////////////////////////////////////////////////////
 function draw() {
 
-  ALL_SONGS_LOADED = loadingBar.getStatus();
-  if( !ALL_SONGS_LOADED ) {
-    background(120)
-    loadingBar.setCounter( sampleLoadedCounter );
-
-    /*
-    computeSeparation();
-    for(let i=0; i<particles.length; i++) {
-      particles[i].display();
-    }
 
 
-
-    push()
-    noStroke()
-    fill(120, 200)
-    rect(0,0,width, height);
-    pop()
-    */
-
-    loadingBar.display();
-
-    // while loading the songs we can still
-    // compute some physics stuff ("separation");
-    return;
-  }
 
   background(255);
   // draw axis
@@ -223,19 +184,32 @@ function draw() {
   axis[1].displayVertical( 30.0, 1);
 
   computeSeparation();
+  loadingBar.setCounter( particles.length- particleLookingForPlace );
 
 
-
-
-
-
-
-  if( ALL_SONGS_LOADED ) {
-    for(let i=0; i<particles.length; i++) {
-      particles[i].checkIfInside( mouseX, mouseY );
-      particles[i].playSongIfInside();
-    }
+  for(let i=0; i<particles.length; i++) {
+    particles[i].display();
   }
+
+
+  if( !EVERYTHING_ON_ITS_RIGHT_PLACE ) {
+    push()
+    noStroke()
+    fill(120, 200)
+    rect(0,0,width, height);
+    pop()
+
+
+    loadingBar.display();
+    return;
+  }
+
+
+  for(let i=0; i<particles.length; i++) {
+    particles[i].checkIfInside( mouseX, mouseY );
+    particles[i].playSongIfInside();
+  }
+
 
   for(let i=0; i<particles.length; i++) {
     particles[i].display();
@@ -243,7 +217,7 @@ function draw() {
 
   // once we have drawn the particles, we can show the text
   for(let i=0; i<particles.length; i++) {
-    particles[i].showText();
+    particles[i].showText( infoBox );
   }
 
 }
@@ -251,7 +225,7 @@ function draw() {
 
 function computeSeparation() {
   // some physics separation stuff here ****************************************
-  let particleLookingForPlace = 0;
+  particleLookingForPlace = 0;
 
   for (let i = 0; i < particles.length; i++) {
     // Path following and separation are worked on in this function
@@ -264,9 +238,7 @@ function computeSeparation() {
       //println("particle ", v.getId(), " didn't find its position yet");
       particleLookingForPlace ++;
     }
-
     //vehicles[i].borders();
-    //particles[i].display();
   }
 
   if( !EVERYTHING_ON_ITS_RIGHT_PLACE) {
@@ -280,11 +252,44 @@ function computeSeparation() {
     }
   }
   // end of physics stuff ******************************************************
-
 }
 
 
 // OTHER FUNCS /////////////////////////////////////////////////////////////////
 function mouseClicked() {
   getAudioContext().resume();
+}
+
+function keyPressed() {
+  if (key === 'r') {
+    print( "rest all visited ");
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].resetVisited();
+    }
+  } else if( key == 's') {
+    // save JSON
+    //print("save json")
+    //print( SAVED_SONG_JSON )
+    saveJSON(SAVED_SONG_JSON, "mySavedPlaylist.json")
+  }
+}
+
+function mousePressed() {
+  for (let i = 0; i < particles.length; i++) {
+    if( !particles[i].getInside() ) {
+      continue;
+    } else {
+      // if song has already been saved,
+      // do not save the data in the collection again
+      if( !particles[i].getSaved() ){
+        let songInfo = particles[i].getSongInfo();
+        print( "saving song: ", songInfo );
+        SAVED_SONG_JSON.push( songInfo )
+        break;
+      } else {
+        print( "you have already saved this song")
+        return;
+    }
+    }
+  }
 }
