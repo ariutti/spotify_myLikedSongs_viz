@@ -100,7 +100,7 @@ class Particle {
 
   showText( _infoBox ) {
     if( this.isInside ) {
-      let text = this.data.name + "\n" + this.data.artists + "\n" + this.data.tempo;
+      let text = this.data.name + "\n" + this.data.artist.join(', ') + "\n" + this.data.tempo;
       _infoBox.update( text );
       _infoBox.display();
     }
