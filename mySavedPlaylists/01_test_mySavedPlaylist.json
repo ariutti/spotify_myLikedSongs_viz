@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1nDn4CeL8u5O6QIm8rPu9j",
+    "artists": [
+      "Louis Cole"
+    ],
+    "name": "More Love Less Hate",
+    "preview_url": "https://p.scdn.co/mp3-preview/f48e3608bb062bdbfb1f73e1dd5740a88d3c2c5d?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/1nDn4CeL8u5O6QIm8rPu9j",
+    "tempo": 173.258,
+    "time_signature": 5,
+    "duration_ms": 60896,
+    "key": 8,
+    "mode": 1,
+    "loudness": -18.884,
+    "danceability": 0.11,
+    "energy": 0.232,
+    "acousticness": 0.991,
+    "instrumentalness": 0.974,
+    "liveness": 0.267,
+    "speechiness": 0.0409,
+    "valence": 0.0791
+  },
+  {
+    "id": "6NlKpIgOeU0y4puwrTFI2w",
+    "artists": [
+      "Austin Wintory"
+    ],
+    "name": "Apotheosis",
+    "preview_url": "https://p.scdn.co/mp3-preview/75bb2cdfaa26983b7b0cce05676ff3bd098c1116?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/6NlKpIgOeU0y4puwrTFI2w",
+    "tempo": 167.68,
+    "time_signature": 3,
+    "duration_ms": 430151,
+    "key": 11,
+    "mode": 0,
+    "loudness": -15.069,
+    "danceability": 0.0876,
+    "energy": 0.271,
+    "acousticness": 0.861,
+    "instrumentalness": 0.955,
+    "liveness": 0.0678,
+    "speechiness": 0.0415,
+    "valence": 0.0354
+  },
+  {
+    "id": "6XNeuuAYTmEd04FQPBorJl",
+    "artists": [
+      "Johann Sebastian Bach",
+      "András Schiff",
+      "Ulrich Schnauss"
+    ],
+    "name": "Bach: Prelude And Fugue In C - Ulrich Schnauss Rework",
+    "preview_url": "https://p.scdn.co/mp3-preview/6d2e6f795f7e5640ec74c61a7cb50dee6a5cba64?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/6XNeuuAYTmEd04FQPBorJl",
+    "tempo": 168.006,
+    "time_signature": 4,
+    "duration_ms": 268893,
+    "key": 0,
+    "mode": 1,
+    "loudness": -12.43,
+    "danceability": 0.301,
+    "energy": 0.511,
+    "acousticness": 0.788,
+    "instrumentalness": 0.953,
+    "liveness": 0.056,
+    "speechiness": 0.0357,
+    "valence": 0.2
+  },
+  {
+    "id": "0xf0Bhxyy12OYJZMfWRl8l",
+    "artists": [
+      "Thomas Newman"
+    ],
+    "name": "Diamond Collapsible",
+    "preview_url": "https://p.scdn.co/mp3-preview/e8ab79af59b6904c0cf33ac54e7e44e8edc9bbaa?cid=d15799fa66d145678638eaacc0278873",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/0xf0Bhxyy12OYJZMfWRl8l",
+    "tempo": 184.014,
+    "time_signature": 4,
+    "duration_ms": 90387,
+    "key": 2,
+    "mode": 1,
+    "loudness": -19.178,
+    "danceability": 0.433,
+    "energy": 0.302,
+    "acousticness": 0.987,
+    "instrumentalness": 0.829,
+    "liveness": 0.32,
+    "speechiness": 0.063,
+    "valence": 0.106
+  }
+]
