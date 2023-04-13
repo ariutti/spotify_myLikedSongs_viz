@@ -1,39 +1,19 @@
 class Particle {
 
   constructor(_id, _x, _y, _r, _c,
-    _artists, _name, _preview_url, _analysis_url,
-    _tempo, _time_signature, _duration_ms, _key, _mode, _loudness,
-    _danceability, _energy, _acousticness, _instrumentalness,
-    _liveness, _speechiness, _valence
+    _data
   )
     {
-    // data point stuff
     this.id = _id;
-    this.artists = _artists;
-    this.name = _name;
-    this.preview_url = _preview_url;
-    this.analysis_url = _analysis_url;
-    this.tempo = _tempo;
-    this.time_signature = _time_signature;
-    this.duration_ms = _duration_ms;
-    this.key = _key
-    this.mode = _mode;
-    this.loudness = _loudness;
-
-    this.danceability = _danceability;
-    this.energy = _energy;
-    this.acousticness = _acousticness;
-    this.instrumentalness = _instrumentalness;
-    this.liveness = _liveness;
-    this.speechiness = _speechiness;
-    this.valence = _valence;
+    // data point stuff
+    this.data = _data;
 
     // audio stuff
     this.song;
 
     // graphics stuff
     this.c = _c;
-    this.visited = false;
+    //this.visited = false;
 
     // physics stuff
     this.r = _r;
@@ -55,10 +35,10 @@ class Particle {
   loadTheSong( _callback ) {
     let songURL;
     if( LOAD_LOCAL_MP3 ) {
-      songURL = "/previews/".concat( this.id );
+      songURL = "/previews/".concat( this.data.id );
       songURL = songURL.concat( ".mp3" );
     } else {
-      songURL = this.preview_url;
+      songURL = this.data.preview_url;
     }
     this.song = loadSound(songURL, _callback );
     this.song.setLoop( true );
@@ -82,7 +62,7 @@ class Particle {
       }
 
       let interColor = lerpColor(COLOR_FROM, COLOR_TO, this.c);
-      if( !this.visited ) {
+      if( !this.saved ) {
         interColor.setAlpha( 255 );
         fill( interColor );
       } else {
@@ -91,9 +71,7 @@ class Particle {
         fill( interColor );
       }
 
-
-
-      if( this.preview_url == null) {
+      if( this.data.preview_url == null) {
         fill(0);
       }
 
@@ -122,7 +100,7 @@ class Particle {
 
   showText( _infoBox ) {
     if( this.isInside ) {
-      let text = this.name + "\n" + this.artists + "\n" + this.tempo;
+      let text = this.data.name + "\n" + this.data.artists + "\n" + this.data.tempo;
       _infoBox.update( text );
       _infoBox.display();
     }
@@ -149,7 +127,7 @@ class Particle {
 
 
   playSongIfInside() {
-    if( this.preview_url == null ) {
+    if( this.data.preview_url == null ) {
       return;
     }
 
@@ -158,7 +136,7 @@ class Particle {
       songURL = "/previews/".concat( this.id );
       songURL = songURL.concat( ".mp3" );
     } else {
-      songURL = this.preview_url;
+      songURL = this.data.preview_url;
     }
 
 
@@ -187,7 +165,7 @@ class Particle {
       // if we are here it means mouse is inside the particle
       if( !this.isInside ) {
         this.isInside = true;
-        this.visited = true;
+        //this.visited = true;
         //print( "inside" )
       }
     } else {
@@ -198,6 +176,58 @@ class Particle {
       }
     }
   }
+
+  // SETTERS ///////////////////////////////////////////////////////////////////
+  settleDown() {
+    this.settled = true;
+    //this.readyToSettle = true;
+  }
+
+  /*
+  resetVisited() {
+    this.saved = false;
+  }
+  */
+
+  getSongInfo() {
+    //print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
+    this.saved = true;
+
+    return this.data;
+  }
+
+
+  // GETTERS ///////////////////////////////////////////////////////////////////
+  getId() {
+    return this.data.id;
+  }
+
+  getRadius() {
+    return this.r;
+  }
+
+  getStatus() {
+    return this.readyToSettle;
+  }
+
+  getPreviewUrl() {
+    return this.data.preview_url;
+  }
+
+  /*
+  getVisited() {
+    return this.visited;
+  }
+  */
+
+  getSaved() {
+    return this.saved;
+  }
+
+  getInside() {
+    return this.isInside;
+  }
+
 
   // PHYSICS STUFF /////////////////////////////////////////////////////////////
   applyForce(_force) {
@@ -314,72 +344,6 @@ class Particle {
   }
   */
 
-  // SETTERS ///////////////////////////////////////////////////////////////////
-  settleDown() {
-    this.settled = true;
-    //this.readyToSettle = true;
-  }
-
-  resetVisited() {
-    this.visited = false;
-  }
-
-  getSongInfo() {
-    //print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
-    let songInfo = {};
-    songInfo.id = this.id;
-    songInfo.artists = this.artists;
-    songInfo.name = this.name;
-    songInfo.preview_url = this.preview_url;
-    songInfo.analysis_url = this.analysis_url;
-    songInfo.tempo = this.tempo;
-    songInfo.time_signature = this.time_signature;
-    songInfo.duration_ms = this.duration_ms;
-    songInfo.key = this.key;
-    songInfo.mode = this.mode;
-    songInfo.loudness = this.loudness;
-
-    songInfo.danceability = this.danceability;
-    songInfo.energy = this.energy;
-    songInfo.acousticness = this.acousticness;
-    songInfo.instrumentalness = this.instrumentalness;
-    songInfo.liveness = this.liveness;
-    songInfo.speechiness = this.speechiness;
-    songInfo.valence = this.valence;
-
-    this.saved = true;
-
-    return songInfo;
-
-  }
 
 
-  // GETTERS ///////////////////////////////////////////////////////////////////
-  getId() {
-    return this.id;
-  }
-
-  getRadius() {
-    return this.r;
-  }
-
-  getStatus() {
-    return this.readyToSettle;
-  }
-
-  getPreviewUrl() {
-    return this.preview_url;
-  }
-
-  getVisited() {
-    return this.visited;
-  }
-
-  getSaved() {
-    return this.saved;
-  }
-
-  getInside() {
-    return this.isInside;
-  }
 };

@@ -105,26 +105,12 @@ function setup() {
   //for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
 
     // retrieve the song informations
-    let id = songList[i]["id"];
-    let artists = songList[i]["artist"];
-    let name = songList[i]["name"];
-    let analysis_url = songList[i]["analysis_url"];
-    let preview_url = songList[i]["preview_url"];
-
+    let id = songList[i]["id"]
     let tempo = songList[i]["tempo"];
-    let time_signature = songList[i]["time_signature"];
-    let duration_ms = songList[i]["duration_ms"];
-    let key = songList[i]["key"];
-    let mode = songList[i]["mode"];
-    let loudness = songList[i]["loudness"];
-
     let danceability = songList[i]["danceability"];
     let energy = songList[i]["energy"];
-    let acousticness = songList[i]["acousticness"];
-    let instrumentalness = songList[i]["instrumentalness"];
-    let liveness = songList[i]["liveness"];
-    let speechiness = songList[i]["speechiness"];
     let valence = songList[i]["valence"];
+
 
     // now let's do some scaling and mapping
     let x = axis[0].getConverted( tempo );
@@ -136,12 +122,9 @@ function setup() {
 
     particles.push( new Particle(id,
       x,y,r,c,
-      artists, name, preview_url, analysis_url,
-      tempo, time_signature, duration_ms, key, mode, loudness,
-      danceability, energy, acousticness, instrumentalness,
-      liveness, speechiness, valence
+      songList[i]
     ));
-    if( preview_url != null ) {
+    if( songList[i]["preview_url"] != null ) {
       NUM_VALID_PREVIEWS ++;
     }
   }
@@ -261,12 +244,14 @@ function mouseClicked() {
 }
 
 function keyPressed() {
+  /*
   if (key === 'r') {
     print( "rest all visited ");
     for (let i = 0; i < particles.length; i++) {
       particles[i].resetVisited();
     }
-  } else if( key == 's') {
+  } else
+  */if( key == 's') {
     // save JSON
     //print("save json")
     //print( SAVED_SONG_JSON )
