@@ -81,7 +81,7 @@ for i in range( RANGE ):
 
 
 #save the list of tracks inside a Json file
-OUTPUT_FILE_NAME = "20230403_LikedSongsDB"
+OUTPUT_FILE_NAME = "20230411_LikedSongsDB_pre"
 
 
 # EXPORT JSON ******************************************************************
