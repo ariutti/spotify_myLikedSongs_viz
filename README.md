@@ -1,19 +1,14 @@
 # README
 
-Still a work in progress
-
-## TBD
-
-* improve documentation
-
-
+Still a work in progress. This readme will be fixed in later releases.
 
 ## preprocessing - python3
 
-We are goning to use python to first get information from my spotify account using the spotify API, via
-the useful 'spotipy' python-wrappre:
+We are goning to use python to first get information from your spotify account using the spotify API, via
+the useful 'spotipy' python-wrapper:
 
-1. First: install 'spotipy' with the command `pip install spotipy --upgrade`
+1. First: install 'spotipy' with the command `pip install spotipy --upgrade`;
+
 
 
 
@@ -33,21 +28,8 @@ https://developer.spotify.com/dashboard/
 API documentation
 https://developer.spotify.com/console/users-profile/
 
-
-Ho creato una nuova app di test nella mia sezione dashboard
-Ed ecco i "secrets"
-
-Client ID: xxxx
-Client Secret: xxxx
-
-
 Ecco altre info su come usare le API
 https://developer.spotify.com/documentation/web-api/quick-start/
-
-
-voglio usare questo "scope" di autoenticazione
-* Authorization code with PKCE
-
 
 
 # spunti e riferimenti

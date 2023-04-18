@@ -1,0 +1,17 @@
+{
+	'external_urls': {'spotify': 'https://open.spotify.com/artist/2Uz58cSxlJgefDaSikxYQ7'},
+	'followers': {'href': None, 'total': 150675},
+	'genres': ['new romantic', 'new wave', 'new wave pop', 'steampunk', 'synthpop', 'zolo'],
+	'href': 'https://api.spotify.com/v1/artists/2Uz58cSxlJgefDaSikxYQ7',
+	'id': '2Uz58cSxlJgefDaSikxYQ7',
+	'images': [
+		{'height': 678, 'url': 'https://i.scdn.co/image/2994dbaf7be7460fb5f4ed0b486c82aa014740e5', 'width': 1000},
+		{'height': 434, 'url': 'https://i.scdn.co/image/82a8cef97ae78dcba17daedd63becb37e8405b69', 'width': 640},
+		{'height': 136, 'url': 'https://i.scdn.co/image/045f54b4d0ed86c2cdb6eda720b4bccbd1385da2', 'width': 200},
+		{'height': 43, 'url': 'https://i.scdn.co/image/48ba94a5c0ca9b495af4cdb051209aaa5fbee6d1', 'width': 63}
+	],
+	'name': 'Thomas Dolby',
+	'popularity': 44,
+	'type': 'artist',
+	'uri': 'spotify:artist:2Uz58cSxlJgefDaSikxYQ7'
+}

@@ -24,8 +24,8 @@ myTracks = []
 
 # from the spotify website I see I have
 # 1159 liked tracks =(approx) 20 * 58 so
-LIMIT = 20
-RANGE = 59
+LIMIT = 5
+RANGE = 1
 
 # for testing purposes
 #LIMIT = 20
