@@ -24,12 +24,24 @@ myTracks = []
 
 # from the spotify website I see I have
 # 1159 liked tracks =(approx) 20 * 58 so
-LIMIT = 5
-RANGE = 1
+LIMIT = 20
+RANGE = 62
 
 # for testing purposes
 #LIMIT = 20
 #RANGE = 5
+
+# a function expecting the track's artist object
+def getGenreFromArtist( artist ):
+	aName = a['name']
+	aID = a['id']
+	aObj = sp.artist( aID )
+	# in case we need also the artist image we can get it
+	#aImgUrl = aObj['images'][-1]['url']
+	#genres = [ g.replace(' ', '-') for g in aObj['genres'] ]
+	genres = [ g for g in aObj['genres'] ]
+	return genres
+
 
 # download track information a block of 'LIMIT' at a time
 for i in range( RANGE ):
@@ -46,17 +58,43 @@ for i in range( RANGE ):
 		# with another character in order for the csv we will create later
 		# not to make error in parsing it
 		name	= track['name'].replace(',','_')
-		# get all the artists fo the song (yes sometimes we have more than one)
-		artists	= [ track['artists'][i]['name'] for i in range( len(track['artists']) ) ]
+
 		uri		= track['uri'].split(':')[2]
 		preview = track['preview_url']
 
-		print( idx+offset, ")", name, " - ", artists) #, "[", uri," - ", preview, "]")
+		# we want also to save the name of the album the track is taken from
+		# and modify it a little bit in order not to make a mess with the CSV export:
+		# + converting it to lowercase;
+		# + replacing commas with undescores;
+		# + replacing all whitespaces with undescores;
+		albumObj = track['album']
+		albumName = albumObj['name'].lower().replace(',','_').replace(' ','_')
+		# we also want to save the pubblication date of the album
+		albumReleaseYear = albumObj['release_date'].split('-')[0]
+
+		# in case we also want the Album ID or the Album image we can do this.
+		#albumId = albumObj['id']
+		#albumImgUrl = albumObj['images'][-1]['url']
+
+
+
+		# get all the artists for the song (yes sometimes we have more than one)
+		artists	= [ track['artists'][i]['name'] for i in range( len(track['artists']) ) ]
+
+		genres = []
+		for a in track['artists']:
+			genres = genres + getGenreFromArtist( a )
+		# TODO: improvements
+		# don't know if but now, genres array could contain duplicates (especially
+		# if track has more than one artist and artsts are, somewhat correllated)
+		# Find a way to epurate this genres array from duplicates
+
+
+		print("{}) track name: {}\nartist(s) - {}:{}\nalbum:{}({})\ngenres:{}\n".format(idx+offset, name,len(track['artists']), artists,albumName,albumReleaseYear, genres))
 
 
 		# get the audio features of the current track
 		af = sp.audio_features( [uri] )
-
 		#print(af)
 
 		track_dict = af[0]
@@ -70,6 +108,9 @@ for i in range( RANGE ):
 		# and also add the items you want
 		track_dict.update({"name": name})
 		track_dict.update({"artist": artists})
+		track_dict.update({"album":albumName})
+		track_dict.update({"genres":genres})
+		track_dict.update({"release_year":albumReleaseYear})
 		track_dict.update({"preview_url": preview})
 		#print( track_dict )
 
@@ -81,7 +122,7 @@ for i in range( RANGE ):
 
 
 #save the list of tracks inside a Json file
-OUTPUT_FILE_NAME = "20230411_LikedSongsDB_pre"
+OUTPUT_FILE_NAME = "20230422_LikedSongsDB_album_genres_test"
 
 
 # EXPORT JSON ******************************************************************
@@ -100,7 +141,7 @@ OUTPUT_FILE_CSV = OUTPUT_FILE_NAME + ".csv"
 with open(OUTPUT_FILE_CSV, mode='w') as of:
 	myCsv_writer = csv.writer(of, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-	HEADER = ['id','name','artist','key','mode','tempo','time_signature','duration_ms','danceability','energy','loudness','speechiness','acousticness','instrumentalness','liveness','valence','analysis_url','preview_url']
+	HEADER = ['id','name','artist','album','release_year','genres','key','mode','tempo','time_signature','duration_ms','danceability','energy','loudness','speechiness','acousticness','instrumentalness','liveness','valence','analysis_url','preview_url']
 	myCsv_writer.writerow( HEADER )
 
 	for track in myTracks:
@@ -108,7 +149,13 @@ with open(OUTPUT_FILE_CSV, mode='w') as of:
 		row.append( track['id'] )
 		row.append( track['name'] )
 
-		row.append( '_'.join(str(x) for x in track['artist']) )
+		# using a pipe to separate artists
+		row.append( '|'.join(str(x) for x in track['artist']) )
+
+		row.append( track['album'] )
+		row.append( track['release_year'] )
+		# I'm using a pipe to separate genres for the same track
+		row.append( '|'.join(str(x) for x in track['genres']) )
 
 		row.append( track['key'] )
 		row.append( track['mode'] )

@@ -2,8 +2,11 @@
 
 import json, subprocess, time
 
+DATABASE_FOLDER = "../myDatasets"
+PREVIEW_FOLDER = "../previews"
+
 try:
-	fp = open("../myDatasets/20230403_LikedSongsDB.json", "r")
+	fp = open("{}/20230403_LikedSongsDB.json".format(DATABASE_FOLDER), "r")
 except:
 	print("failed to open the Json file")
 	exit()
@@ -12,7 +15,9 @@ j = json.load(fp)
 NUM_TRACK = len(j)
 print( "We have {} tracks inside the list".format(NUM_TRACK) )
 
-PREVIEW_FOLDER = "../previews"
+
+from os.path import exists
+
 for i, track_obj in enumerate(j):
 
 	# now we should download the audio preview of the track
@@ -29,6 +34,13 @@ for i, track_obj in enumerate(j):
 	id 			= track_obj["id"]
 
 	if( preview_url is not None):
+		# add here a check to see if we already have downloaded the mp3 preview
+		# don't need to download it againg if we already have it
+		if exists("{}/{}.mp3".format(PREVIEW_FOLDER, id) ):
+			print("the preview file already exhist, trying with the next...")
+			continue
+
+
 		print( "Downloading '{}' preview".format(preview_url) )
 		subprocess.run(["curl", preview_url, "--output", "{}/{}.mp3".format(PREVIEW_FOLDER, id)])
 		#time.sleep(0.5)

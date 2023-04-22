@@ -32,19 +32,27 @@ for i in range( RANGE ):
 
 		albumObj = track['album']
 		release_year = albumObj['release_date'].split('-')[0]
+
+		#TODO
+		# + replace commas with undescore
+		# + convert lowercase
+		# + replace all whitespaces with undescores
+		albumName = albumObj['name'].lower().replace(',','_').replace(' ','_')
+
 		albumId = albumObj['id']
 		albumImgUrl = albumObj['images'][-1]['url']
-		print(release_year, albumId, albumImgUrl)
+		print(albumName, release_year, albumId, albumImgUrl)
 
 		# for each artist get:
 		# + the name
 		# + a list of his genres
-		# + its img urs
+		# + its img url
 		for a in track['artists']:
 			aName = a['name']
 			aID = a['id']
 			aObj = sp.artist( aID )
 			aImgUrl = aObj['images'][-1]['url']
+			genres = [ g.replace(' ', '_') for g in aObj['genres'] ]
 
 			#print( artistObj )
-			print( aName, [ g.replace(' ', '_') for g in aObj['genres'] ], aImgUrl)
+			print( aName, genres, aImgUrl)
