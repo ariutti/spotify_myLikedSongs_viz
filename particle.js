@@ -28,6 +28,22 @@ class Particle {
 
     // data retrieval by interaction stuff
     this.saved = false;
+
+
+		// filters stuff
+		// The particle should be visible if
+		// + not filtered by Tempo;
+		// + not filtered by Danceability;
+		// + not filtered by Energy;
+		// + not filtered by Valence;
+		this.filteredByTempo = false;
+		this.filteredByDanceability = false;
+		this.filteredByEnergy  = false;
+		this.filteredByValence = false;
+		this.visible = true;
+
+		// search stuff
+		this.foundInSearch = false;
   }
 
   // LOAD THE SONG /////////////////////////////////////////////////////////////
@@ -47,6 +63,13 @@ class Particle {
   // DISPLAY ///////////////////////////////////////////////////////////////////
   display() {
 
+		// update visibility status
+		this.visible = true;
+		if( this.filteredByTempo || this.filteredByDanceability || this.filteredByEnergy || this.filteredByValence ) {
+			this.visible = false;
+		}
+
+
     push();
 
     translate( this.position.x, this.position.y );
@@ -58,11 +81,18 @@ class Particle {
       if( this.isInside ) {
         strokeWeight(4);
       } else {
-        noStroke();
+				if( this.foundInSearch ) {
+					strokeWeight(4);
+				} else {
+					noStroke();
+				}
       }
 
       let interColor = lerpColor(COLOR_FROM, COLOR_TO, this.c);
       if( !this.saved ) {
+				if( this.foundInSearch ) {
+					stroke(50, 255,0);
+				}
         interColor.setAlpha( 255 );
         fill( interColor );
       } else {
@@ -75,6 +105,8 @@ class Particle {
         fill(0);
       }
 
+
+
     } else if( this.readyToSettle ) {
       // it is grey if it is ready to settle down
       stroke(255);
@@ -86,7 +118,11 @@ class Particle {
       strokeWeight(1);
       fill(255,0,0);
     }
-    ellipse(0, 0, this.r*2, this.r*2);
+
+		// but, if particle has been filtered out, don't show it
+		if( this.visible ) {
+			ellipse(0, 0, this.r*2, this.r*2);
+		} // if visible;
 
     // showCenter
     // strokeWeight(2);
@@ -99,7 +135,7 @@ class Particle {
 
 
   showText( _infoBox ) {
-    if( this.isInside ) {
+    if( this.isInside && this.visible) {
       let text = this.data.name + "\n" + this.data.artist.join(', ') + "\n" + this.data.tempo;
       _infoBox.update( text );
       _infoBox.display();
@@ -183,51 +219,43 @@ class Particle {
     //this.readyToSettle = true;
   }
 
+	setVisible( _value ) { this.visible = _value; }
+
   /*
   resetVisited() {
     this.saved = false;
   }
   */
 
-  getSongInfo() {
-    //print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
-    this.saved = true;
 
-    return this.data;
-  }
 
 
   // GETTERS ///////////////////////////////////////////////////////////////////
-  getId() {
-    return this.data.id;
-  }
+	getId() { return this.data.id; }
+	getPreviewUrl() { return this.data.preview_url; }
+	getName() { return this.data.name; }
+	getArtist() { return this.data.artist; }
+	//getAlbum() {}
 
-  getRadius() {
-    return this.r;
-  }
+	getValence() { return this.data.valence; }
+	getTempo() { return this.data.tempo; }
+	getDanceability() { return this.data.danceability; }
+	getEnergy() { return this.data.energy; }
 
-  getStatus() {
-    return this.readyToSettle;
-  }
+	getSongInfo() {
+		//print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
+		this.saved = true;
+		return this.data;
+	}
 
-  getPreviewUrl() {
-    return this.data.preview_url;
-  }
+  getRadius() { return this.r; }
+  getStatus() { return this.readyToSettle; }
 
-  /*
-  getVisited() {
-    return this.visited;
-  }
-  */
 
-  getSaved() {
-    return this.saved;
-  }
-
-  getInside() {
-    return this.isInside;
-  }
-
+  getSaved() { return this.saved; }
+  getInside() { return this.isInside; }
+	getVisible() { return this.visible; }
+	//getVisited() { return this.visited; }
 
   // PHYSICS STUFF /////////////////////////////////////////////////////////////
   applyForce(_force) {

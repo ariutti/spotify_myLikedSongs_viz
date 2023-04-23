@@ -19,6 +19,7 @@ class Axis {
 
   }
 
+	// GETTERS ///////////////////////////////////////////////////////////////////
   getConverted( _data_value ) {
     let converted;
     converted = (_data_value - this.data_min ) / this.data_range;
@@ -26,7 +27,15 @@ class Axis {
     return converted;
   }
 
+	// from a value between 0-100, get the corresponding mapped value in the data range
+	getDataValue( _zeroTohundredValue ) {
+		return map(_zeroTohundredValue, 0, 100, this.data_min, this.data_max);
+	}
 
+	getDataMin() { return this.data_min; }
+	getDataMax() { return this.data_max; }
+
+	// DISPLAY ///////////////////////////////////////////////////////////////////
   displayVertical( _x, _upOrDown ) {
     push()
     stroke(0);
@@ -40,6 +49,4 @@ class Axis {
     line(this.axis_min, _y, this.axis_max, _y)
     pop()
   }
-  
-
 };

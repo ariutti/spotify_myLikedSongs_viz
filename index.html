@@ -5,14 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>p5.js example</title>
-  <style>
-    body {
-      padding: 10px;
-      margin: 2px;
-      background-color: #eeeeee;
-    }
-  </style>
 
+	<link rel="stylesheet" href="style/main.css">
   <!--
   <script src="/libs/p5.min.js"></script>
   <script src="/libs/p5.sound.min.js"></script>
@@ -21,20 +15,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js" integrity="sha512-WzkwpdWEMAY/W8WvP9KS2/VI6zkgejR4/KTxTl4qHx0utqeyVE0JY+S1DlMuxDChC7x0oXtk/ESji6a0lP/Tdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+	<script src="filterBox.js"></script>
   <script src="infoBox.js"></script>
   <script src="loadingBar.js"></script>
   <script src="axis.js"></script>
   <script src="particle.js"></script>
-  <script src="sketch.js"></script>
+  <script src="main.js"></script>
 
 </head>
 
 <body>
   <main>
-    <h1>My Loved Song exploration toolkit</h1>
-    <p>We are exploring a database of <b id="num_songs">0</b> songs but <b id="num_previews">0</b> of them don't have a valid <i>.mp3</i> preview (coloured in black).</p>
+    <h1>My Loved Song exploration toolkit (wip)</h1>
+    <p>We are exploring a database of <b id="num_songs">0</b> songs but <b id="num_failed_previews">0</b> of them (<i id="num_failed_previews_percentage">0</i>%) don't have a valid <i>.mp3</i> preview (coloured in black).</p>
     <ul>
-      <li> x axis represents <b>BPM</b>;</li>
+      <li> x axis represents <b>tempo</b>;</li>
       <li> y axis represents <b>danceability</b>;</li>
       <li> colour represents <b>valence</b>;</li>
       <li> dimension represents <b>energy</b>;</li>
@@ -46,9 +41,50 @@
       <li> Move your mouse to explore the liked song database</li>
       <!--<li> press <b>r</b> to reset <i>visited</i> songs</li>-->
       <li> Click mouse left button to save the song for later export</li>
-      <li> press <b>s</b> to save a new Json with the saved song from your exploration</li>
+      <!--<li> press <b>s</b> to save a new Json with the saved song from your exploration</li>-->
     </ul>
     <p>Already visited songs will be less bright in their color</p>
+
+		<div id="filterBox">
+			<h2>Filters</h2>
+
+			<p>Search for artist / track / (album - TBD): <input type="text" placeholder="Brian Eno..." id="searchBar"></p>
+
+			<table>
+				<tr>
+					<td>tempo</td>
+					<td>min</td>
+					<td><input type="range" min="0" max="100" value="0"   class="slider" id="tempoMin"></td>
+			    <td>max</td>
+					<td><input type="range" min="0" max="100" value="100" class="slider" id="tempoMax"></td>
+				</tr>
+
+				<tr>
+					<td>danceabilty</td>
+					<td>min</td>
+					<td><input type="range" min="0" max="100" value="0"   class="slider" id="danceMin"></td>
+					<td>max</td>
+					<td><input type="range" min="0" max="100" value="100" class="slider" id="danceMax"></td>
+				</tr>
+
+				<tr>
+					<td>energy</td>
+					<td>min</td>
+					<td><input type="range" min="0" max="100" value="0"   class="slider" id="energyMin"></td>
+					<td>max</td>
+					<td><input type="range" min="0" max="100" value="100" class="slider" id="energyMax"></td>
+				</tr>
+
+				<tr>
+					<td>valence</td>
+					<td>min</td>
+					<td><input type="range" min="0" max="100" value="0"   class="slider" id="valenceMin"></td>
+					<td>max</td>
+					<td><input type="range" min="0" max="100" value="100" class="slider" id="valenceMax"> </td>
+				</tr>
+
+			</table>
+		</div>
   </main>
 </body>
 

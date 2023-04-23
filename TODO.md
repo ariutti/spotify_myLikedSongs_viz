@@ -11,6 +11,14 @@
 * change the behaviour of visited to saved (i pallozzi diventano opachi solo se li hai salvati);
 * upload your Json file
 * aggiusta il volume della traccia basandoti sul valore di loudness
+* aggiungi uno step di caricamento iniziale del JSON tramite drag-and-drop. Inoltre, il parser del JSON appena caricato, dovrebbe controllare l'esistenza dei campi X e Y e, in caso esistano, evitare di fare il "cirle-packing" dei pallozzi ma usare le coordinate esistenti.
+	* https://p5js.org/reference/#/p5/createFileInput
+	* https://p5js.org/reference/#/p5.Element/drop
+
+* inserire un campo di testo dove l'utente possa digitare nome del brano e dell'artista per fare una ricerca di tutti i pallozzi che abbiano le caratteristiche compatibili;
+	* input: https://p5js.org/reference/#/p5/input
+
+* usa un modo per filtrare i brani in base al loro BPM o alla loro "danzabilità" (magari usando degli sliders: https://p5js.org/reference/#/p5/createSlider)
 
 ## BUGS
 

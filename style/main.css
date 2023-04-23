@@ -1,0 +1,20 @@
+body {
+	padding: 10px;
+	margin: 2px;
+	background-color: #eeeeee;
+	font-size: 10px;
+}
+
+.slider {
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+  width: 100%; /* Full-width */
+	height: 15px;
+	border-radius: 5px;
+	background: #d3d3d3;
+}
+
+#filterBox {
+	border: 1px solid black;
+	padding: 10px;
+}

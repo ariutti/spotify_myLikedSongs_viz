@@ -11,7 +11,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-import subprocess
+import subprocess, math
 
 scope = "user-library-read"
 
@@ -24,8 +24,9 @@ myTracks = []
 
 # from the spotify website I see I have
 # 1159 liked tracks =(approx) 20 * 58 so
+NUM_LIKED_SONGS = 1228
 LIMIT = 20
-RANGE = 62
+RANGE = math.ceil( NUM_LIKED_SONGS / LIMIT )
 
 # for testing purposes
 #LIMIT = 20
@@ -41,6 +42,9 @@ def getGenreFromArtist( artist ):
 	#genres = [ g.replace(' ', '-') for g in aObj['genres'] ]
 	genres = [ g for g in aObj['genres'] ]
 	return genres
+
+
+NUM_FAILED_PREVIEWS = 0
 
 
 # download track information a block of 'LIMIT' at a time
@@ -61,6 +65,10 @@ for i in range( RANGE ):
 
 		uri		= track['uri'].split(':')[2]
 		preview = track['preview_url']
+		if preview == None:
+			NUM_FAILED_PREVIEWS = NUM_FAILED_PREVIEWS + 1
+
+
 
 		# we want also to save the name of the album the track is taken from
 		# and modify it a little bit in order not to make a mess with the CSV export:
@@ -122,7 +130,8 @@ for i in range( RANGE ):
 
 
 #save the list of tracks inside a Json file
-OUTPUT_FILE_NAME = "20230422_LikedSongsDB_album_genres_test"
+OUTPUT_FILE_NAME = "20230422_LikedSongsDB_album_genres_test_the_cure"
+print( "{} over {} have a null preview ({}%)".format(NUM_FAILED_PREVIEWS,NUM_LIKED_SONGS, math.ceil((NUM_FAILED_PREVIEWS*100)/NUM_LIKED_SONGS) ) )
 
 
 # EXPORT JSON ******************************************************************

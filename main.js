@@ -1,5 +1,5 @@
 // for debugging purposes
-let NUM_PARTICLE_TO_BE_CONSIDERED = 100;
+let NUM_PARTICLE_TO_BE_CONSIDERED = 300;
 //let PARTICLE_SUBSET;
 
 
@@ -22,11 +22,14 @@ let particleLookingForPlace;
 
 let SAVED_SONG_JSON = []
 
+//let filterBox = None;
+
 // PHYSICS STUFF ***************************************************************
 let EVERYTHING_ON_ITS_RIGHT_PLACE = false;
 
 // PRELOAD /////////////////////////////////////////////////////////////////////
 function preload() {
+	//jsonDB = loadJSON("./assets/db/20230422_LikedSongsDB_album_genres_test.json", function() {
   jsonDB = loadJSON("./assets/db/20230403_LikedSongsDB.json", function() {
     print("JSON data base loaded");
     JSON_LOADED = true;
@@ -133,8 +136,10 @@ function setup() {
 
   let e = select('#num_songs');
   e.elt.textContent = particles.length ;
-  e = select('#num_previews');
+  e = select('#num_failed_previews');
   e.elt.textContent = particles.length-NUM_VALID_PREVIEWS;
+	e = select('#num_failed_previews_percentage');
+  e.elt.textContent = Math.round( ((particles.length-NUM_VALID_PREVIEWS) * 100 ) / particles.length );
 
 
 
@@ -152,14 +157,16 @@ function setup() {
 
   // INFO BOX stuff
   infoBox = new InfoBox(width*0.05, height*0.1, 200, 50);
-}
+
+
+	// FILTER BOX
+	filterBox = new FilterBox( 20, 400, 100, 100, axis[0], axis[1], axis[2], axis[3]);
+
+} // end of SETUP
 
 
 // DRAW ////////////////////////////////////////////////////////////////////////
 function draw() {
-
-
-
 
   background(255);
   // draw axis
@@ -187,10 +194,16 @@ function draw() {
     return;
   }
 
+	filterBox.updateFilters();
+
+
 
   for(let i=0; i<particles.length; i++) {
-    particles[i].checkIfInside( mouseX, mouseY );
-    particles[i].playSongIfInside();
+		// check if mouse inside only if particle is visible
+		if( particles[i].visible ) {
+	    particles[i].checkIfInside( mouseX, mouseY );
+	    particles[i].playSongIfInside();
+		}
   }
 
 
@@ -203,11 +216,130 @@ function draw() {
     particles[i].showText( infoBox );
   }
 
+	//filterBox.display();
+
+} //end of DRAW
+
+// Filter functions ************************************************************
+function filterByValence( _min, _max) {
+	for(let i=0; i<particles.length; i++) {
+    let value = particles[i].getValence();
+		if( value <= _min || value >= _max) {
+			particles[i].filteredByValence = true ;
+		}
+  }
+}
+
+function filterByEnergy( _min, _max) {
+	for(let i=0; i<particles.length; i++) {
+    let value = particles[i].getEnergy();
+		if( value <= _min || value >= _max) {
+			particles[i].filteredByEnergy = true ;
+		}
+  }
+}
+
+function filterByDanceability( _min, _max) {
+	for(let i=0; i<particles.length; i++) {
+    let value = particles[i].getDanceability();
+		if( value <= _min || value >= _max) {
+			particles[i].filteredByDanceability = true ;
+		}
+  }
 }
 
 
+function filterByTempo( _min, _max) {
+	for(let i=0; i<particles.length; i++) {
+    let value = particles[i].getTempo();
+		if( value <= _min || value >= _max) {
+			particles[i].filteredByTempo = true ;
+		}
+  }
+}
+
+function resetFilterValence() {
+	for(let i=0; i<particles.length; i++) {
+		particles[i].filteredByValence = false ;
+  }
+}
+
+function resetFilterEnergy() {
+	for(let i=0; i<particles.length; i++) {
+		particles[i].filteredByEnergy = false ;
+  }
+}
+
+
+function resetFilterDanceability() {
+	for(let i=0; i<particles.length; i++) {
+		particles[i].filteredByDanceability = false ;
+  }
+}
+
+
+function resetFilterTempo() {
+	for(let i=0; i<particles.length; i++) {
+		particles[i].filteredByTempo = false ;
+	}
+}
+
+
+function resetFilterAll() {
+	resetFilterValence();
+	resetFilterEnergy();
+	resetFilterDanceability();
+	resetFilterTempo();
+}
+
+// SEARCH FUNCTIONS ************************************************************
+function resetSearch() {
+	for(let i=0; i<particles.length; i++) {
+		particles[i].foundInSearch = false;
+	}
+}
+
+
+function search( _string ) {
+	// first of all, reset previous searches
+	resetSearch();
+
+	let foundSomething = false;
+	let searchResults = [];
+
+	for(let i=0; i<particles.length; i++) {
+		let name  = particles[i].getName();
+		let artist = particles[i].getArtist().join(', ');
+		//let album = particles[i].getAlbum();
+
+
+		let nameContains   = name.toLowerCase().search( _string.toLowerCase() );
+		let artistContains = artist.toLowerCase().search( _string.toLowerCase() );
+		//let albumContains  = album.toLowerCase().search( _string.toLowerCase() );
+
+		if( nameContains == -1 ){ nameContains = false; } else { nameContains = true; }
+		if( artistContains == -1 ){ artistContains = false; } else { artistContains = true; }
+		//if( albumContains == -1 ){ albumContains = false; } else { albumContains = true; }
+
+		if( nameContains || artistContains ) {
+			//print("FOUND!!!!")
+			//print( name )
+			//print( artist )
+			foundSomething = true;
+			searchResults.push( particles[i] );
+		}
+  }
+
+	for(let i=0; i<searchResults.length; i++) {
+		searchResults[i].foundInSearch = true;
+		//print( searchResults[i].getName()  );
+		//print( searchResults[i].getArtist().join(', ')  );
+	}
+}
+
+
+// PHYSICS FUNCTIONS ***********************************************************
 function computeSeparation() {
-  // some physics separation stuff here ****************************************
   particleLookingForPlace = 0;
 
   for (let i = 0; i < particles.length; i++) {
@@ -234,7 +366,6 @@ function computeSeparation() {
       }
     }
   }
-  // end of physics stuff ******************************************************
 }
 
 
@@ -251,14 +382,19 @@ function keyPressed() {
       particles[i].resetVisited();
     }
   } else
-  */if( key == 's') {
+  */
+
+	/*
+	if( key == 's') {
     // save JSON
     //print("save json")
     //print( SAVED_SONG_JSON )
     saveJSON(SAVED_SONG_JSON, "mySavedPlaylist.json")
   }
+	*/
 }
 
+/*
 function mousePressed() {
   for (let i = 0; i < particles.length; i++) {
     if( !particles[i].getInside() ) {
@@ -278,3 +414,4 @@ function mousePressed() {
     }
   }
 }
+*/
