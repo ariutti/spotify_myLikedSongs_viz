@@ -224,7 +224,7 @@ function draw() {
 function filterByValence( _min, _max) {
 	for(let i=0; i<particles.length; i++) {
     let value = particles[i].getValence();
-		if( value <= _min || value >= _max) {
+		if( value < _min || value > _max) {
 			particles[i].filteredByValence = true ;
 		}
   }
@@ -233,7 +233,7 @@ function filterByValence( _min, _max) {
 function filterByEnergy( _min, _max) {
 	for(let i=0; i<particles.length; i++) {
     let value = particles[i].getEnergy();
-		if( value <= _min || value >= _max) {
+		if( value < _min || value > _max) {
 			particles[i].filteredByEnergy = true ;
 		}
   }
@@ -242,7 +242,7 @@ function filterByEnergy( _min, _max) {
 function filterByDanceability( _min, _max) {
 	for(let i=0; i<particles.length; i++) {
     let value = particles[i].getDanceability();
-		if( value <= _min || value >= _max) {
+		if( value < _min || value > _max) {
 			particles[i].filteredByDanceability = true ;
 		}
   }
@@ -252,7 +252,7 @@ function filterByDanceability( _min, _max) {
 function filterByTempo( _min, _max) {
 	for(let i=0; i<particles.length; i++) {
     let value = particles[i].getTempo();
-		if( value <= _min || value >= _max) {
+		if( value < _min || value > _max) {
 			particles[i].filteredByTempo = true ;
 		}
   }
