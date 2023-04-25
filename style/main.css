@@ -2,8 +2,15 @@ body {
 	padding: 10px;
 	margin: 2px;
 	background-color: #eeeeee;
-	font-size: 10px;
+	/*font-size: 10px;*/
+	font-family: 'Source Code Pro', monospace;
 }
+
+
+h1 {
+	font-family: 'Sigmar', cursive;
+}
+
 
 .slider {
 	-webkit-appearance: none;  /* Override default CSS styles */
@@ -14,7 +21,15 @@ body {
 	background: #d3d3d3;
 }
 
-#filterBox {
+#filterBox, #saved_songs_section {
 	border: 1px solid black;
 	padding: 10px;
+}
+
+#saved_songs_table {
+	width:100%;
+}
+
+#saved_songs_section tr {
+	background-color: #dddddd;
 }

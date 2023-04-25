@@ -4,17 +4,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p5.js example</title>
+  <title>My loved song toolkit</title>
+
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+	<link href="https://fonts.googleapis.com/css2?family=Sigmar&family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet">
+
+
+
+
+
 
 	<link rel="stylesheet" href="style/main.css">
-  <!--
-  <script src="/libs/p5.min.js"></script>
-  <script src="/libs/p5.sound.min.js"></script>
--->
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js" integrity="sha512-WzkwpdWEMAY/W8WvP9KS2/VI6zkgejR4/KTxTl4qHx0utqeyVE0JY+S1DlMuxDChC7x0oXtk/ESji6a0lP/Tdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+	<script src="savedSong.js"></script>
 	<script src="filterBox.js"></script>
   <script src="infoBox.js"></script>
   <script src="loadingBar.js"></script>
@@ -26,7 +35,8 @@
 
 <body>
   <main>
-    <h1>My Loved Song exploration toolkit (wip)</h1>
+    <h1>My Loved Song exploration toolkit</h1>
+
     <p>We are exploring a database of <b id="num_songs">0</b> songs but <b id="num_failed_previews">0</b> of them (<i id="num_failed_previews_percentage">0</i>%) don't have a valid <i>.mp3</i> preview (coloured in black).</p>
     <ul>
       <li> x axis represents <b>tempo</b>;</li>
@@ -85,6 +95,19 @@
 
 			</table>
 		</div>
+
+		<div id="canvas_goes_here"></div>
+
+		<div id="saved_songs_section">
+			<h2>Track Selection</h2>
+			<p>You currently have <b id="num_saved_songs">0</b> saved songs (mouse over to preview):</p>
+
+			<table id="saved_songs_table"></table>
+
+			<hr>
+			<button type="button" id="save_selection_button">Save selection</button>
+		</div>
+
   </main>
 </body>
 

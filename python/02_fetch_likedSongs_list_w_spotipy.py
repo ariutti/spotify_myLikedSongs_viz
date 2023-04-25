@@ -10,21 +10,18 @@
 
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-
-import subprocess, math
-
 scope = "user-library-read"
-
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
 
+import subprocess, math
 # create an array where to store all the 'track dictionaries'
 # we are going to create
 myTracks = []
 
 # from the spotify website I see I have
 # 1159 liked tracks =(approx) 20 * 58 so
-NUM_LIKED_SONGS = 1228
+NUM_LIKED_SONGS = 1262
 LIMIT = 20
 RANGE = math.ceil( NUM_LIKED_SONGS / LIMIT )
 
@@ -100,6 +97,7 @@ for i in range( RANGE ):
 
 		print("{}) track name: {}\nartist(s) - {}:{}\nalbum:{}({})\ngenres:{}\n".format(idx+offset, name,len(track['artists']), artists,albumName,albumReleaseYear, genres))
 
+		#https://open.spotify.com/track/50f0mt35cIwwu3Krk7nS7b?si=1fe19624930c4850
 
 		# get the audio features of the current track
 		af = sp.audio_features( [uri] )
@@ -109,7 +107,7 @@ for i in range( RANGE ):
 		# delete the unwanted associations
 		del track_dict["type"]
 		#del track_dict["id"]
-		del track_dict["uri"]
+		#del track_dict["uri"] # preserver uri in order to use later with spotdl
 		del track_dict["track_href"]
 		#del track_dict["analysis_url"]
 
@@ -130,7 +128,7 @@ for i in range( RANGE ):
 
 
 #save the list of tracks inside a Json file
-OUTPUT_FILE_NAME = "20230422_LikedSongsDB_album_genres_test_the_cure"
+OUTPUT_FILE_NAME = "20230424_LikedSongsDB"
 print( "{} over {} have a null preview ({}%)".format(NUM_FAILED_PREVIEWS,NUM_LIKED_SONGS, math.ceil((NUM_FAILED_PREVIEWS*100)/NUM_LIKED_SONGS) ) )
 
 

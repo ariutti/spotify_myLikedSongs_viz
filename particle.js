@@ -189,7 +189,7 @@ class Particle {
       if( this.song ) {
         //print("playback paused");
         this.song.pause();
-        this.song = null
+        this.song = null;
       }
     }
   }
@@ -221,6 +221,8 @@ class Particle {
 
 	setVisible( _value ) { this.visible = _value; }
 
+	setSaved() { this.saved = true; }
+
   /*
   resetVisited() {
     this.saved = false;
@@ -244,7 +246,6 @@ class Particle {
 
 	getSongInfo() {
 		//print( "you are inside particle ", this.id, "(", this.name,",",this.artists,")")
-		this.saved = true;
 		return this.data;
 	}
 

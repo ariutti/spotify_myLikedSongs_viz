@@ -20,9 +20,11 @@ let COLOR_TO;
 let loadingBar;
 let particleLookingForPlace;
 
-let SAVED_SONG_JSON = []
-
-//let filterBox = None;
+let SAVED_SONGS_JSON = []
+let SAVED_SONGS_OBJECTS = [] // a place where we collect SavedSongs instances
+// a ref to a specific DOM element where to list all the saver tracks
+let SAVED_SONGS_TABLE
+let SAVE_SELECTION_BUTTON
 
 // PHYSICS STUFF ***************************************************************
 let EVERYTHING_ON_ITS_RIGHT_PLACE = false;
@@ -39,17 +41,20 @@ function preload() {
 
 // SETUP ///////////////////////////////////////////////////////////////////////
 function setup() {
-  createCanvas(1200, 800);
-  smooth()
+
+	// Found a way to place the cnavas in a specific position inside the HTML
+	// ref: https://stackoverflow.com/questions/67423267/how-to-use-div-appendchildcanvas-in-p5js
+	const canvas = createCanvas(1200, 800);
+  canvas.parent("canvas_goes_here");
+  canvas.style("display", "block");
+
+	//smooth()
 
   // some graphics stuff
-  //COLOR_FROM = color(218, 165, 32);
-  //COLOR_TO = color(72, 61, 139);
   COLOR_FROM = color(81, 127, 255);
   COLOR_TO = color(255, 114, 48);
 
-  // we have to take care of the AudioContext
-  // an make it work only if necessary
+  // we have to take care of the AudioContext an make it work only if necessary
   getAudioContext().suspend();
 
   while( !JSON_LOADED ) {
@@ -76,8 +81,8 @@ function setup() {
   let max_z = -9999;
   let range_z = 0;
 
-  for(let i=0; i<songList.length;i++) {
-  //for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
+  //for(let i=0; i<songList.length;i++) {
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
     let tempo = songList[i]["tempo"];
     let danceability = songList[i]["danceability"];
     let energy = songList[i]["energy"];
@@ -104,8 +109,8 @@ function setup() {
 
   // now its time to create all the particles
 
-  for(let i=0; i<songList.length;i++) {
-  //for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
+  //for(let i=0; i<songList.length;i++) {
+  for(let i=0; i<NUM_PARTICLE_TO_BE_CONSIDERED;i++) {
 
     // retrieve the song informations
     let id = songList[i]["id"]
@@ -141,8 +146,6 @@ function setup() {
 	e = select('#num_failed_previews_percentage');
   e.elt.textContent = Math.round( ((particles.length-NUM_VALID_PREVIEWS) * 100 ) / particles.length );
 
-
-
   loadingBar = new LoadingBar(
     width*0.5,
     height*0.5,
@@ -161,6 +164,13 @@ function setup() {
 
 	// FILTER BOX
 	filterBox = new FilterBox( 20, 400, 100, 100, axis[0], axis[1], axis[2], axis[3]);
+
+
+	// SAVED tracks BOX
+
+	SAVED_SONGS_TABLE = document.getElementById("saved_songs_table");
+	SAVE_SELECTION_BUTTON = document.getElementById("save_selection_button");
+	SAVE_SELECTION_BUTTON.addEventListener("click", save_my_track_selection );
 
 } // end of SETUP
 
@@ -248,7 +258,6 @@ function filterByDanceability( _min, _max) {
   }
 }
 
-
 function filterByTempo( _min, _max) {
 	for(let i=0; i<particles.length; i++) {
     let value = particles[i].getTempo();
@@ -270,20 +279,17 @@ function resetFilterEnergy() {
   }
 }
 
-
 function resetFilterDanceability() {
 	for(let i=0; i<particles.length; i++) {
 		particles[i].filteredByDanceability = false ;
   }
 }
 
-
 function resetFilterTempo() {
 	for(let i=0; i<particles.length; i++) {
 		particles[i].filteredByTempo = false ;
 	}
 }
-
 
 function resetFilterAll() {
 	resetFilterValence();
@@ -298,7 +304,6 @@ function resetSearch() {
 		particles[i].foundInSearch = false;
 	}
 }
-
 
 function search( _string ) {
 	// first of all, reset previous searches
@@ -337,7 +342,6 @@ function search( _string ) {
 	}
 }
 
-
 // PHYSICS FUNCTIONS ***********************************************************
 function computeSeparation() {
   particleLookingForPlace = 0;
@@ -368,7 +372,6 @@ function computeSeparation() {
   }
 }
 
-
 // OTHER FUNCS /////////////////////////////////////////////////////////////////
 function mouseClicked() {
   getAudioContext().resume();
@@ -394,24 +397,69 @@ function keyPressed() {
 	*/
 }
 
-/*
+function save_my_track_selection() {
+	// save JSON
+	print("save json")
+	//print( SAVED_SONGS_JSON )
+	saveJSON(SAVED_SONGS_JSON, "test_01_mySavedPlaylist.json")
+}
+
+
+// this function has an erratic behaviour, try to find a way to solve this
+function removeSavedSongFromTable( _event ) {
+
+	// remove object from the saved songs list
+	let song_id = _event["target"].getAttribute("song_id") ;
+	//print( index )
+	// traverse the saved songs list to find the corrisponding song to be removed
+	for( let i=0; i < SAVED_SONGS_OBJECTS.length; i++) {
+		if( SAVED_SONGS_OBJECTS[i].getId() == song_id) {
+			SAVED_SONGS_OBJECTS.splice(i, 1)
+			break;
+		}
+	}
+
+	// remove also the song row from the table
+	let rowToBeRemoved = _event["target"].parentNode;
+	rowToBeRemoved.remove()
+
+	// and also update the "saved song counter"
+	let e = select('#num_saved_songs');
+	e.elt.textContent = SAVED_SONGS_OBJECTS.length ;
+
+}
+
+
 function mousePressed() {
   for (let i = 0; i < particles.length; i++) {
-    if( !particles[i].getInside() ) {
+    if( !particles[i].getInside() || !particles[i].visible ) {
       continue;
     } else {
-      // if song has already been saved,
-      // do not save the data in the collection again
+      // if song has not been saved previously,
+			// collect the track inside the saved table
       if( !particles[i].getSaved() ){
-        let songInfo = particles[i].getSongInfo();
-        print( "saving song: ", songInfo );
-        SAVED_SONG_JSON.push( songInfo )
+				particles[i].setSaved();
+
+				// create a saved song instance a pass
+				// + the index of the object inside the list
+				// + reference to the particle inside the graph
+				// + the DOM table ref
+				// + the "saved songs object list" ref
+				let savedSongObj = new SavedSong( SAVED_SONGS_OBJECTS.length, particles[i], SAVED_SONGS_TABLE, removeSavedSongFromTable);
+
+				// put a reference to this very object inside the object array
+				SAVED_SONGS_OBJECTS.push( savedSongObj );
+
+				//print( SAVED_SONGS_OBJECTS.length );
+				// update the text
+				let e = select('#num_saved_songs');
+				e.elt.textContent = SAVED_SONGS_OBJECTS.length ;
+
         break;
       } else {
-        print( "you have already saved this song")
+        print( "you have already saved this song");
         return;
     }
     }
   }
 }
-*/
