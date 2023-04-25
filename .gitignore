@@ -2,3 +2,4 @@ previews/*.mp3
 *.mp3
 *.wav
 *.ogg
+*.spotdlTrackingFile

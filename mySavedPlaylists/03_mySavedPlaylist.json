@@ -1,0 +1,157 @@
+[
+  {
+    "danceability": 0.709,
+    "energy": 0.824,
+    "key": 1,
+    "loudness": -8.824,
+    "mode": 1,
+    "speechiness": 0.0453,
+    "acousticness": 0.207,
+    "instrumentalness": 0.000307,
+    "liveness": 0.0888,
+    "valence": 0.867,
+    "tempo": 118.818,
+    "id": "2tUBqZG2AbRi7Q0BIrVrEj",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/2tUBqZG2AbRi7Q0BIrVrEj",
+    "duration_ms": 291293,
+    "time_signature": 4,
+    "name": "I Wanna Dance with Somebody (Who Loves Me)",
+    "artist": [
+      "Whitney Houston"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/7414ae6c811dee16c467c256429c7427fbcc98d0?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.728,
+    "energy": 0.598,
+    "key": 2,
+    "loudness": -8.438,
+    "mode": 1,
+    "speechiness": 0.0457,
+    "acousticness": 0.00265,
+    "instrumentalness": 0.387,
+    "liveness": 0.109,
+    "valence": 0.488,
+    "tempo": 126.98,
+    "id": "4mEOVSAhZW1eunsRHQzwxk",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/4mEOVSAhZW1eunsRHQzwxk",
+    "duration_ms": 311240,
+    "time_signature": 4,
+    "name": "Absence Of Rhythm",
+    "artist": [
+      "This Soft Machine"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/c1e23f4ca8543e7e2227b8917bf24af14066aca8?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.705,
+    "energy": 0.861,
+    "key": 10,
+    "loudness": -4.875,
+    "mode": 1,
+    "speechiness": 0.0296,
+    "acousticness": 0.000227,
+    "instrumentalness": 0.543,
+    "liveness": 0.388,
+    "valence": 0.616,
+    "tempo": 131.999,
+    "id": "5Xpqhct9FEx8bHxEM2mW8s",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/5Xpqhct9FEx8bHxEM2mW8s",
+    "duration_ms": 561253,
+    "time_signature": 4,
+    "name": "Yeah (Crass Version)",
+    "artist": [
+      "LCD Soundsystem"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/4f4d4962fcc0c1e454ab923bdbcedc021b148a3b?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.795,
+    "energy": 0.665,
+    "key": 10,
+    "loudness": -10.952,
+    "mode": 0,
+    "speechiness": 0.0552,
+    "acousticness": 0.0857,
+    "instrumentalness": 0.748,
+    "liveness": 0.0766,
+    "valence": 0.555,
+    "tempo": 122.018,
+    "id": "5TFHM6fKlbTYm0r0SnHzJZ",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/5TFHM6fKlbTYm0r0SnHzJZ",
+    "duration_ms": 371922,
+    "time_signature": 4,
+    "name": "It's More Fun to Compute / Home Computer",
+    "artist": [
+      "Kraftwerk"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/6d18211b864bc7dec0388deb346b65b9a40b0a85?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.773,
+    "energy": 0.619,
+    "key": 10,
+    "loudness": -12.915,
+    "mode": 0,
+    "speechiness": 0.0608,
+    "acousticness": 0.118,
+    "instrumentalness": 0.156,
+    "liveness": 0.307,
+    "valence": 0.632,
+    "tempo": 129.041,
+    "id": "5vku3twiELeCswJtbbeueO",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/5vku3twiELeCswJtbbeueO",
+    "duration_ms": 380593,
+    "time_signature": 4,
+    "name": "Numbers / Computer World",
+    "artist": [
+      "Kraftwerk"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/506ca2d67ce4e26727e91308a990b06edf8386b0?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.83,
+    "energy": 0.809,
+    "key": 4,
+    "loudness": -7.259,
+    "mode": 0,
+    "speechiness": 0.0643,
+    "acousticness": 0.0415,
+    "instrumentalness": 0.795,
+    "liveness": 0.147,
+    "valence": 0.615,
+    "tempo": 119.001,
+    "id": "3KWsnbH1djzELbc2TNGbMi",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/3KWsnbH1djzELbc2TNGbMi",
+    "duration_ms": 389265,
+    "time_signature": 4,
+    "name": "Dr. Ácula",
+    "artist": [
+      "Le Blanc Casanova",
+      "Dan Solo"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/d6a9dba490fac38db4cb0d8c40554aaa1c845d47?cid=d15799fa66d145678638eaacc0278873"
+  },
+  {
+    "danceability": 0.855,
+    "energy": 0.847,
+    "key": 2,
+    "loudness": -9.019,
+    "mode": 1,
+    "speechiness": 0.042,
+    "acousticness": 0.234,
+    "instrumentalness": 0.00062,
+    "liveness": 0.345,
+    "valence": 0.89,
+    "tempo": 122.644,
+    "id": "7ohR0qPH6f2Vuj2pUNanJG",
+    "analysis_url": "https://api.spotify.com/v1/audio-analysis/7ohR0qPH6f2Vuj2pUNanJG",
+    "duration_ms": 255133,
+    "time_signature": 4,
+    "name": "Got To Give It Up - Pt. 1",
+    "artist": [
+      "Marvin Gaye"
+    ],
+    "preview_url": "https://p.scdn.co/mp3-preview/0f7eb2cfd8486d74f9fb9f3987d0013d79d0339d?cid=d15799fa66d145678638eaacc0278873"
+  }
+]

@@ -6,11 +6,9 @@ body {
 	font-family: 'Source Code Pro', monospace;
 }
 
-
 h1 {
 	font-family: 'Sigmar', cursive;
 }
-
 
 .slider {
 	-webkit-appearance: none;  /* Override default CSS styles */
@@ -32,4 +30,12 @@ h1 {
 
 #saved_songs_section tr {
 	background-color: #dddddd;
+}
+
+#song_info_box {
+	background-color:#ffffff;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	border: 3px solid #ff0000;
 }

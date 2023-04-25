@@ -54,7 +54,9 @@ class SavedSong {
 		_event["target"].parentNode.setAttribute("style", "background-color: #aaaaaa");
 
 		this.song = new Audio( this.songInfo.preview_url );
+		//this.song.volume = 0.1;
 		this.song.play();
+		this.song.loop = true;
 	}
 
 	onOutAction( _event ) {

@@ -40,6 +40,7 @@ class Particle {
 		this.filteredByDanceability = false;
 		this.filteredByEnergy  = false;
 		this.filteredByValence = false;
+		this.filteredByCenterClick = false;
 		this.visible = true;
 
 		// search stuff
@@ -65,7 +66,7 @@ class Particle {
 
 		// update visibility status
 		this.visible = true;
-		if( this.filteredByTempo || this.filteredByDanceability || this.filteredByEnergy || this.filteredByValence ) {
+		if( this.filteredByTempo || this.filteredByDanceability || this.filteredByEnergy || this.filteredByValence || this.filteredByCenterClick ) {
 			this.visible = false;
 		}
 
@@ -132,8 +133,17 @@ class Particle {
     pop();
   }
 
+	showText( _infoBoxElement ) {
+    if( this.isInside && this.visible) {
+      let text = this.data.name + "</br>" + this.data.artist.join(', ') + "</br>" + this.data.tempo;
+			_infoBoxElement.innerHTML = text;
+			_infoBoxElement.setAttribute("style", "display:block");
+    }
+  }
 
 
+	/*
+	// old way of doing
   showText( _infoBox ) {
     if( this.isInside && this.visible) {
       let text = this.data.name + "\n" + this.data.artist.join(', ') + "\n" + this.data.tempo;
@@ -141,26 +151,7 @@ class Particle {
       _infoBox.display();
     }
   }
-
-/*
-// old method no more used
-  showText( ) {
-    let text_size = 24;
-    textSize(text_size);
-    textAlign(CENTER, CENTER);
-    push();
-    strokeWeight(4);
-    stroke(255);
-    translate( this.position.x, this.position.y-(text_size*3));
-    if( this.isInside ) {
-      text(this.name, 0, 0);
-      text(this.artists, 0, text_size);
-      text(this.tempo, 0, text_size*2);
-    }
-    pop();
-  }
-*/
-
+	*/
 
   playSongIfInside() {
     if( this.data.preview_url == null ) {
@@ -183,13 +174,18 @@ class Particle {
         this.song = new Audio( songURL );
         //print("playback started/resumed");
         // TODO: implement a loop playback system
+
+				this.song.loop = true; // song will loop if mouse over
+				//this.song.volume = 0.1;
         this.song.play();
-      }
+      } else {
+				this.song.play();
+			}
     } else {
       if( this.song ) {
         //print("playback paused");
         this.song.pause();
-        this.song = null;
+        //this.song = null;
       }
     }
   }
@@ -222,6 +218,14 @@ class Particle {
 	setVisible( _value ) { this.visible = _value; }
 
 	setSaved() { this.saved = true; }
+
+	setFilteredByCenterClick() {
+		this.filteredByCenterClick = true;
+		if( this.song ) {
+			this.song.pause();
+			this.song = null;
+		}
+	}
 
   /*
   resetVisited() {

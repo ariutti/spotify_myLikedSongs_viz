@@ -8,30 +8,7 @@ We are goning to use python to first get information from your spotify account u
 the useful 'spotipy' python-wrapper:
 
 1. First: install 'spotipy' with the command `pip install spotipy --upgrade`;
-
-
-
-
-## clean up all below stuff
-
-# Spotify API
-
-per fare uso delle API spotify, in particolar modo quelle che accedono ai dati del profilo personale, occorre registrare una App all'account spotify.
-
-https://developer.spotify.com/documentation/general/guides/authorization/app-settings/
-
-Devi accedere alla tua dashboard
-https://developer.spotify.com/dashboard/
-
-
-
-API documentation
-https://developer.spotify.com/console/users-profile/
-
-Ecco altre info su come usare le API
-https://developer.spotify.com/documentation/web-api/quick-start/
-
-
-# spunti e riferimenti
-* https://spotipy.readthedocs.io/en/2.12.0/
-* https://stmorse.github.io/journal/spotify-api.html
+2. use python to retrieve your "loved songs" (script `02_fetch_likedSongs_list_w_spotipy.py`);
+3. once you have a Json file with all your loved songs inside, you can aim it in your javascript in order for the code to create the corresponding visualization. To do that modify the JS code and, inside this root folder, evaluate the command `http-server`;
+4. Select songs from the web interface and click `save selection` button. You will be prompted to save the Json somewhere;
+5. now use python script `08_spotdl_get_a_track.py` to download the tracks;

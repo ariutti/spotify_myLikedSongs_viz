@@ -6,26 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My loved song toolkit</title>
 
-
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-
 	<link href="https://fonts.googleapis.com/css2?family=Sigmar&family=Source+Code+Pro:wght@300&display=swap" rel="stylesheet">
-
-
-
-
-
-
 	<link rel="stylesheet" href="style/main.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js" integrity="sha512-WzkwpdWEMAY/W8WvP9KS2/VI6zkgejR4/KTxTl4qHx0utqeyVE0JY+S1DlMuxDChC7x0oXtk/ESji6a0lP/Tdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<!--
+	<script src="libs/p5.min.js"></script>
+  <script src="libs/p5.sound.min.js"></script>
+-->
+
 	<script src="savedSong.js"></script>
 	<script src="filterBox.js"></script>
-  <script src="infoBox.js"></script>
+  <!-- <script src="infoBox.js"></script> -->
   <script src="loadingBar.js"></script>
   <script src="axis.js"></script>
   <script src="particle.js"></script>
@@ -35,30 +31,38 @@
 
 <body>
   <main>
-    <h1>My Loved Song exploration toolkit</h1>
 
-    <p>We are exploring a database of <b id="num_songs">0</b> songs but <b id="num_failed_previews">0</b> of them (<i id="num_failed_previews_percentage">0</i>%) don't have a valid <i>.mp3</i> preview (coloured in black).</p>
-    <ul>
-      <li> x axis represents <b>tempo</b>;</li>
-      <li> y axis represents <b>danceability</b>;</li>
-      <li> colour represents <b>valence</b>;</li>
-      <li> dimension represents <b>energy</b>;</li>
+
+    <h1>My Loved Song exploration toolkit</h1>
+		<p>Visualization below is a representation of your spotify <i>loved songs</i> according to songs <a href="https://developer.spotify.com/documentation/web-api/reference/get-audio-features">audio features</a> as intended by Spotify.</p>
+
+		<p>Every dot inside the graph represents a single song. Move your mouse over them to get an audio preview of the song. You can also click on a song in order to save it inside a list for later export. if you "center click" on a song, you will remove the song from the visualization.</p>
+
+		<ul>
+      <li> x axis represents <b>tempo</b> feature;</li>
+      <li> y axis represents <b>danceability</b> feature;</li>
+      <li> colour represents <b>valence</b> feature;</li>
+      <li> dimension represents <b>energy</b> feature;</li>
     </ul>
 
+    <p>You are exploring a database of <b id="num_songs">0</b> songs but <b id="num_failed_previews">0</b> of them (<i id="num_failed_previews_percentage">0</i>%) don't have a valid <i>.mp3</i> preview (coloured in black).</p>
+
+
+<!--
     <h2>Instructions</h2>
     <ul>
       <li> Click with the mouse before moving it over the particles in order for the audio to be initialized.</li>
       <li> Move your mouse to explore the liked song database</li>
-      <!--<li> press <b>r</b> to reset <i>visited</i> songs</li>-->
       <li> Click mouse left button to save the song for later export</li>
-      <!--<li> press <b>s</b> to save a new Json with the saved song from your exploration</li>-->
     </ul>
     <p>Already visited songs will be less bright in their color</p>
+-->
+
 
 		<div id="filterBox">
 			<h2>Filters</h2>
 
-			<p>Search for artist / track / (album - TBD): <input type="text" placeholder="Brian Eno..." id="searchBar"></p>
+			<p>You can use filter to better refine your research.</p>
 
 			<table>
 				<tr>
@@ -94,19 +98,32 @@
 				</tr>
 
 			</table>
+
+			<p>Or you can also search for specific artist / track / (album - TBD): <input type="text" placeholder="Brian Eno..." id="searchBar"></p>
+
 		</div>
 
 		<div id="canvas_goes_here"></div>
 
+		<div id="song_info_box">
+			<p>Title: </p>
+			<p>Artist:</p>
+			<p>Album:</p>
+			<p>Release Year:</p>
+			<p>tempo: </p>
+		</div>
+
+
 		<div id="saved_songs_section">
-			<h2>Track Selection</h2>
-			<p>You currently have <b id="num_saved_songs">0</b> saved songs (mouse over to preview):</p>
+			<h2>Selected Songs</h2>
+			<p>You currently have selected <b id="num_saved_songs">0</b> songs (mouse over to preview):</p>
 
 			<table id="saved_songs_table"></table>
 
 			<hr>
 			<button type="button" id="save_selection_button">Save selection</button>
 		</div>
+
 
   </main>
 </body>
